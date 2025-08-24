@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "front-chart.fullname" . }}-service
+  namespace: ingress-nginx
+  labels:
+    {{- include "front-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "front-chart.selectorLabels" . | nindent 4 }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 80

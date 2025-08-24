@@ -1,0 +1,111 @@
+name: Deploy to ArgoCD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'helm-chart/front-chart/**'
+      - 'helm-chart/api-chart/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+env:
+  # Helm 차트 설정 (시크릿으로 관리)
+  API_IMAGE_REPOSITORY: ${{ secrets.API_IMAGE_REPOSITORY }}
+  FRONTEND_IMAGE_REPOSITORY: ${{ secrets.FRONTEND_IMAGE_REPOSITORY }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v3.12.0
+        
+    - name: Configure Git
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        
+    - name: Package Front Helm chart
+      run: |
+        cd helm-chart/front-chart
+        helm package .
+        echo "Front chart packaged successfully"
+        
+    - name: Package API Helm chart
+      run: |
+        cd helm-chart/api-chart
+        helm package .
+        echo "API chart packaged successfully"
+        
+    - name: Validate Front Helm chart
+      run: |
+        cd helm-chart/front-chart
+        helm lint .
+        echo "Front chart validation passed"
+        
+    - name: Validate API Helm chart
+      run: |
+        cd helm-chart/api-chart
+        helm lint .
+        echo "API chart validation passed"
+        
+    - name: Update Helm chart values with secrets
+      run: |
+        # API 차트 values.yaml에 이미지 레포지토리 추가
+        cd helm-chart/api-chart
+        if [ -n "$API_IMAGE_REPOSITORY" ]; then
+          # apiImageRepository 필드가 없으면 추가
+          if ! grep -q "apiImageRepository:" values.yaml; then
+            sed -i '/^image:/i apiImageRepository: "'$API_IMAGE_REPOSITORY'"' values.yaml
+          else
+            sed -i "s|apiImageRepository:.*|apiImageRepository: \"$API_IMAGE_REPOSITORY\"|" values.yaml
+          fi
+        fi
+        
+        # Frontend 차트 values.yaml에 이미지 레포지토리 추가
+        cd ../front-chart
+        if [ -n "$FRONTEND_IMAGE_REPOSITORY" ]; then
+          # frontendImageRepository 필드가 없으면 추가
+          if ! grep -q "frontendImageRepository:" values.yaml; then
+            sed -i '/^image:/i frontendImageRepository: "'$FRONTEND_IMAGE_REPOSITORY'"' values.yaml
+          else
+            sed -i "s|frontendImageRepository:.*|frontendImageRepository: \"$FRONTEND_IMAGE_REPOSITORY\"|" values.yaml
+          fi
+        fi
+        
+        echo "Helm chart values updated with secrets"
+        
+    - name: Check Helm chart configuration
+      run: |
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ]; then
+          echo "API image repository: $API_IMAGE_REPOSITORY"
+          echo "Frontend image repository: $FRONTEND_IMAGE_REPOSITORY"
+        else
+          echo "Warning: Image repositories not configured"
+        fi
+        
+    - name: Notify ArgoCD deployment
+      run: |
+        echo "Helm chart source code has been updated"
+        echo "ArgoCD will automatically detect the change and deploy the new version"
+        echo "No need to push chart package - ArgoCD reads from source directly"
+        
+    - name: Notify deployment
+      run: |
+        echo "Deployment triggered for Helm chart source code changes"
+        echo "Check ArgoCD dashboard for deployment status"
+        echo "ArgoCD will automatically sync when it detects changes in the helm-chart directory"
+        
+        # 시크릿 설정 상태 확인
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ]; then
+          echo "✅ Image repositories configured"
+        else
+          echo "⚠️  Image repositories not configured - check secrets"
+        fi

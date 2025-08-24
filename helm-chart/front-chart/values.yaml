@@ -1,0 +1,29 @@
+replicaCount: 3
+
+# 이름 오버라이드 설정
+fullnameOverride: "front"
+
+image:
+  repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-frontend
+  tag: "20250824145353-10624574b3d94540f53d7ca333c2e0388feab572"
+deployment:
+  maxUnavailable: 0
+  maxSurge: 1
+service:
+  type: ClusterIP
+  port: 80
+configMapName: front-config
+profile: "local"
+
+# HPA 설정
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  #메모리 제한 설정
+  memoryLimit: "2Gi"
+  memoryRequest: "1Gi"
+  cpuLimit: "1000m"
+  cpuRequest: "500m"

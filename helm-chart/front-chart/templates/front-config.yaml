@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMapName }}
+  namespace: ingress-nginx
+data:
+  VITE_API_URL: "http://api-service.ingress-nginx.svc.cluster.local"

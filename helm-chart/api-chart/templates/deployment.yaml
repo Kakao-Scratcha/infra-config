@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "api-chart.fullname" . }}-deployment
+  namespace: ingress-nginx
+  labels:
+    {{- include "api-chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.maxSurge }}
+  selector:
+    matchLabels:
+      {{- include "api-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "api-chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        configmap-checksum: {{ include (print $.Template.BasePath "/api-config.yaml") . | sha256sum }}
+    spec:
+      nodeSelector:
+        kakaoi.io/kke-nodepool: team2-api
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: Always
+        env:
+        - name: PROFILE
+          value: "{{ .Values.profile }}"
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.configMapName }}
+        - secretRef:
+            name: mysql-primary-secret
+        - secretRef:
+            name: mysql-secondary-secret
+        - secretRef:
+            name: jwt-secret
+        - secretRef:
+            name: mysql-url-secret
+        ports:
+        - containerPort: 8001
+        {{- if .Values.autoscaling.enabled }}
+        resources:
+          requests:
+            memory: {{ .Values.autoscaling.memoryRequest }}
+            cpu: {{ .Values.autoscaling.cpuRequest }}
+          limits:
+            memory: {{ .Values.autoscaling.memoryLimit }}
+            cpu: {{ .Values.autoscaling.cpuLimit }}
+        {{- end }}
+      imagePullSecrets:
+      - name: kc-cr-secret
