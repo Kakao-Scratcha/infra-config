@@ -44,6 +44,8 @@ spec:
             name: jwt-secret
         - secretRef:
             name: mysql-url-secret
+        - secretRef:
+            name: backend-s3-url
         ports:
         - containerPort: 8001
         {{- if .Values.autoscaling.enabled }}
