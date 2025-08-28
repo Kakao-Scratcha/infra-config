@@ -1,0 +1,43 @@
+# 이름 오버라이드 설정
+fullnameOverride: "ml-vision"
+
+image:
+  repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-ml-vision
+  tag: latest
+deployment:
+  maxUnavailable: 0
+  maxSurge: 1
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+configMapName: ml-vision-config
+profile: "local"
+
+# HPA 설정
+autoscaling:
+  enabled: false  # Deployment 비활성화
+  minReplicas: 0
+  maxReplicas: 0 
+  targetCPUUtilizationPercentage: 60  
+  targetMemoryUtilizationPercentage: 70
+
+  memoryLimit: "12Gi"
+  memoryRequest: "8Gi"
+  cpuLimit: "3500m"
+  cpuRequest: "2000m"
+
+  gpuLimit: 1
+  gpuRequest: 1
+
+# CronJob 설정
+cronjob:
+  enabled: true
+  schedule: "*3  * * *"  # 매일 1시마다
+  memoryRequest: "8Gi"
+  memoryLimit: "12Gi"
+  cpuRequest: "2000m"
+  cpuLimit: "3000m"
+  
+  # 퀴즈 생성 수량 설정 (모든 난이도 동일)
+  quizCount: 50      # 각 난이도별 퀴즈 생성 수
