@@ -33,7 +33,7 @@ autoscaling:
 # CronJob 설정
 cronjob:
   enabled: true
-  schedule: "*/3 * * * *"  # 매일 1시마다
+  schedule: "*/5 * * * *"  # 5분마다
   memoryRequest: "8Gi"
   memoryLimit: "12Gi"
   cpuRequest: "2000m"
