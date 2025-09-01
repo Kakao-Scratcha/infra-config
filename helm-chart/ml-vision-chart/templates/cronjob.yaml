@@ -16,12 +16,13 @@ spec:
             {{- include "ml-vision-chart.selectorLabels" . | nindent 12 }}
         spec:
           restartPolicy: OnFailure
+          hostNetwork: false
           nodeSelector:
             kakaoi.io/kke-nodepool: team2-ml-vision
           containers:
           - name: {{ .Release.Name }}-cronjob
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             command: ["python", "quiz/cronjob_quiz_generator.py"]  # 크론잡 실행 스크립트
             env:
             - name: PROFILE
