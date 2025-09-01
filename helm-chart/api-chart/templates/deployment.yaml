@@ -33,6 +33,8 @@ spec:
         env:
         - name: PROFILE
           value: "{{ .Values.profile }}"
+        - name: TZ
+          value: "Asia/Seoul"
         envFrom:
         - configMapRef:
             name: {{ .Values.configMapName }}
