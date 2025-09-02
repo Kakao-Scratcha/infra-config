@@ -8,3 +8,6 @@ data:
   MYSQL_PORT_PRIMARY: "22000"
   MYSQL_HOST_SECONDARY: "az-b.team2-db.1bb3c9ceb1db43928600b93b2a2b1d50.mysql.managed-service.kr-central-2.kakaocloud.com"
   MYSQL_PORT_SECONDARY: "22001"
+  HTTP_PROXY: "http://10.0.130.50:3128"
+  HTTPS_PROXY: "http://10.0.130.50:3128"
+  NO_PROXY: "localhost,127.0.0.1,.svc,.cluster.local,10.96.0.0/12"
