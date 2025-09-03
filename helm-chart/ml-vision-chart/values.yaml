@@ -2,7 +2,7 @@
 fullnameOverride: "ml-vision"
 
 image:
-  repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-ml-vision-dev
+  repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-ml-vision
   tag: latest
   pullPolicy: IfNotPresent
 deployment:
