@@ -5,7 +5,7 @@ fullnameOverride: "front"
 
 image:
   repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-frontend
-  tag: "20250903075057-e235f62db6ee04136cc3b76be5f604054b7712a2"
+  tag: "20250903085030-919eba88b79790ef34820e9b499ff20df3c23024"
   pullPolicy: IfNotPresent
 deployment:
   maxUnavailable: 0
