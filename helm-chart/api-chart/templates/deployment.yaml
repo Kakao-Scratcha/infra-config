@@ -29,7 +29,7 @@ spec:
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: PROFILE
           value: "{{ .Values.profile }}"
