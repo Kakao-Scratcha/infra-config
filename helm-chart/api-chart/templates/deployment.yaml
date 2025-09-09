@@ -22,9 +22,8 @@ spec:
       labels:
         {{- include "api-chart.selectorLabels" . | nindent 8 }}
         app: fastapi-app
-        # 프로메테우스가 이 파드를 발견할 수 있도록 레이블을 추가합니다.
-        prometheus.io/scrape: "true" 
-        prometheus.io/port: "8001"
+        "prometheus.io/scrape": "true"
+        "prometheus.io/port": "8001"
       annotations:
         configmap-checksum: {{ include (print $.Template.BasePath "/api-config.yaml") . | sha256sum }}
     spec:
