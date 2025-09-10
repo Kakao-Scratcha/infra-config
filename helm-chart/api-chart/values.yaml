@@ -4,6 +4,7 @@ fullnameOverride: "api"
 image:
   repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-backend
   tag: "20250910005753-f95ee8b8abd6eb476dbbbabd6f1970607ec7c258"
+
   pullPolicy: IfNotPresent
 deployment:
   maxUnavailable: 0
@@ -12,18 +13,17 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 8001
-configMapName: app-config
 profile: "local"
 
 # HPA 설정
 autoscaling:
   enabled: true
-  minReplicas: 1
-  maxReplicas: 3
+  minReplicas: 3
+  maxReplicas: 6
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
   #메모리 제한 설정
-  memoryLimit: "4Gi"
-  memoryRequest: "2Gi"
-  cpuLimit: "3000m"
-  cpuRequest: "1500m"
+  memoryLimit: "1Gi"
+  memoryRequest: "500Mi"
+  cpuLimit: "1000m"
+  cpuRequest: "500m"

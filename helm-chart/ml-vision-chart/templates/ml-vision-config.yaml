@@ -4,10 +4,7 @@ metadata:
   name: {{ .Values.configMapName }}
   namespace: ingress-nginx
 data:
-  MYSQL_HOST_PRIMARY: "az-a.team2-db.1bb3c9ceb1db43928600b93b2a2b1d50.mysql.managed-service.kr-central-2.kakaocloud.com"
-  MYSQL_PORT_PRIMARY: "22000"
-  MYSQL_HOST_SECONDARY: "az-b.team2-db.1bb3c9ceb1db43928600b93b2a2b1d50.mysql.managed-service.kr-central-2.kakaocloud.com"
-  MYSQL_PORT_SECONDARY: "22001"
+
   SCHEDULE_ENABLED: "{{ .Values.SCHEDULE_ENABLED }}"
   SCHEDULE_INTERVAL_HOURS: "{{ .Values.SCHEDULE_INTERVAL_HOURS }}"
   SCHEDULE_TIMEZONE: "{{ .Values.SCHEDULE_TIMEZONE }}"
