@@ -16,12 +16,12 @@ profile: "local"
 # HPA 설정
 autoscaling:
   enabled: true
-  minReplicas: 1
-  maxReplicas: 3
+  minReplicas: 3
+  maxReplicas: 6
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
   #메모리 제한 설정
-  memoryLimit: "4Gi"
-  memoryRequest: "2Gi"
-  cpuLimit: "3000m"
-  cpuRequest: "1500m"
+  memoryLimit: "1Gi"
+  memoryRequest: "500Mi"
+  cpuLimit: "1000m"
+  cpuRequest: "500m"
