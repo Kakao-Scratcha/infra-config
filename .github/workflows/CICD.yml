@@ -7,7 +7,8 @@ on:
       - 'helm-chart/front-chart/**'
       - 'helm-chart/api-chart/**'
       - 'helm-chart/ml-vision-chart/**'
-      - '.github/workflows/deploy.yml'
+      - 'helm-chart/ml-behavior-chart/**'
+      - '.github/workflows/CICD.yml'
   workflow_dispatch:
 
 env:
@@ -15,6 +16,7 @@ env:
   API_IMAGE_REPOSITORY: ${{ secrets.API_IMAGE_REPOSITORY }}
   FRONTEND_IMAGE_REPOSITORY: ${{ secrets.FRONTEND_IMAGE_REPOSITORY }}
   ML_VISION_IMAGE_REPOSITORY: ${{ secrets.ML_VISION_IMAGE_REPOSITORY }}
+  ML_BEHAVIOR_IMAGE_REPOSITORY: ${{ secrets.ML_BEHAVIOR_IMAGE_REPOSITORY }}
 
 jobs:
   build-and-push:
@@ -52,6 +54,12 @@ jobs:
         helm package .
         echo "ML Vision chart packaged successfully"
         
+    - name: Package ML Behavior Helm chart
+      run: |
+        cd helm-chart/ml-behavior-chart
+        helm package .
+        echo "ML Behavior chart packaged successfully"
+        
     - name: Validate Front Helm chart
       run: |
         cd helm-chart/front-chart
@@ -69,6 +77,12 @@ jobs:
         cd helm-chart/ml-vision-chart
         helm lint .
         echo "ML Vision chart validation passed"
+        
+    - name: Validate ML Behavior Helm chart
+      run: |
+        cd helm-chart/ml-behavior-chart
+        helm lint .
+        echo "ML Behavior chart validation passed"
         
     - name: Update Helm chart values with secrets
       run: |
@@ -105,14 +119,26 @@ jobs:
           fi
         fi
         
+        # ML Behavior 차트 values.yaml에 이미지 레포지토리 추가
+        cd ../ml-behavior-chart
+        if [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
+          # mlBehaviorImageRepository 필드가 없으면 추가
+          if ! grep -q "mlBehaviorImageRepository:" values.yaml; then
+            sed -i '/^image:/i mlBehaviorImageRepository: "'$ML_BEHAVIOR_IMAGE_REPOSITORY'"' values.yaml
+          else
+            sed -i "s|mlBehaviorImageRepository:.*|mlBehaviorImageRepository: \"$ML_BEHAVIOR_IMAGE_REPOSITORY\"|" values.yaml
+          fi
+        fi
+        
         echo "Helm chart values updated with secrets"
         
     - name: Check Helm chart configuration
       run: |
-        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ]; then
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
           echo "API image repository: $API_IMAGE_REPOSITORY"
           echo "Frontend image repository: $FRONTEND_IMAGE_REPOSITORY"
           echo "ML Vision image repository: $ML_VISION_IMAGE_REPOSITORY"
+          echo "ML Behavior image repository: $ML_BEHAVIOR_IMAGE_REPOSITORY"
         else
           echo "Warning: Image repositories not configured"
         fi
@@ -130,8 +156,8 @@ jobs:
         echo "ArgoCD will automatically sync when it detects changes in the helm-chart directory"
         
         # 시크릿 설정 상태 확인
-        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ]; then
-          echo "Image repositories configured"
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
+          echo " Image repositories configured"
         else
-          echo "Image repositories not configured - check secrets"
+          echo "  Image repositories not configured - check secrets"
         fi
