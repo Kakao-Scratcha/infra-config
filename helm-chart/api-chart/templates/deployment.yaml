@@ -22,7 +22,6 @@ spec:
       labels:
         {{- include "api-chart.selectorLabels" . | nindent 8 }}
       annotations:
-        configmap-checksum: {{ include (print $.Template.BasePath "/api-config.yaml") . | sha256sum }}
     spec:
       nodeSelector:
         kakaoi.io/kke-nodepool: team2-api
@@ -36,8 +35,6 @@ spec:
         - name: TZ
           value: "Asia/Seoul"
         envFrom:
-        - configMapRef:
-            name: {{ .Values.configMapName }}
         - secretRef:
             name: mysql-primary-secret
         - secretRef:
@@ -48,6 +45,8 @@ spec:
             name: mysql-url-secret
         - secretRef:
             name: backend-s3-url
+        - secretRef:
+            name: db-secret
         ports:
         - containerPort: 8001
         {{- if .Values.autoscaling.enabled }}

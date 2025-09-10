@@ -11,18 +11,17 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 8001
-configMapName: app-config
 profile: "local"
 
 # HPA 설정
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 8
+  minReplicas: 1
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
   #메모리 제한 설정
-  memoryLimit: "1Gi"
-  memoryRequest: "500m"
-  cpuLimit: "1000m"
-  cpuRequest: "500m"
+  memoryLimit: "4Gi"
+  memoryRequest: "2Gi"
+  cpuLimit: "3000m"
+  cpuRequest: "1500m"
