@@ -1,0 +1,68 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ml-behavior-chart.fullname" . }}-deployment
+  namespace: ingress-nginx
+  labels:
+    {{- include "ml-behavior-chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.maxSurge }}
+  selector:
+    matchLabels:
+      {{- include "ml-behavior-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ml-behavior-chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        configmap-checksum: {{ include (print $.Template.BasePath "/ml-behavior-config.yaml") . | sha256sum }}
+    spec:
+      nodeSelector:
+        kakaoi.io/kke-nodepool: team2-ml-behavior
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+        env:
+        - name: PROFILE
+          value: "{{ .Values.profile }}"
+        - name : TZ
+          value: "Asia/Seoul"
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.configMapName }}
+        - secretRef:
+            name: s3-secret
+        - secretRef:
+            name: proxy-secret
+        - secretRef:
+            name: db-secret
+        ports:
+        - containerPort: 8000
+        {{- if .Values.autoscaling.enabled }}
+        resources:
+          requests:
+            memory: {{ .Values.autoscaling.memoryRequest }}
+            cpu: {{ .Values.autoscaling.cpuRequest }}
+            {{- if gt (.Values.autoscaling.gpuRequest | int) 0 }}
+            nvidia.com/gpu: {{ .Values.autoscaling.gpuRequest }}
+            {{- end }}
+          limits:
+            memory: {{ .Values.autoscaling.memoryLimit }}
+            cpu: {{ .Values.autoscaling.cpuLimit }}
+            {{- if gt (.Values.autoscaling.gpuLimit | int) 0 }}
+            nvidia.com/gpu: {{ .Values.autoscaling.gpuLimit }}
+            {{- end }}
+        {{- end }}
+      imagePullSecrets:
+      - name: kc-cr-secret
+{{- end }}
