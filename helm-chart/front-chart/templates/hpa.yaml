@@ -51,10 +51,10 @@ spec:
     {{- end }}
   behavior:
     scaleDown:
-      stabilizationWindowSeconds: 300  # 5분으로 늘림 (네트워크 트래픽은 더 안정적)
+      stabilizationWindowSeconds: 60 
       policies:
       - type: Percent
-        value: 20
+        value: 30
         periodSeconds: 120
     scaleUp:
       stabilizationWindowSeconds: 30 
@@ -63,6 +63,6 @@ spec:
         value: 100
         periodSeconds: 30
       - type: Pods
-        value: 3
+        value: 4
         periodSeconds: 30
 {{- end }}
