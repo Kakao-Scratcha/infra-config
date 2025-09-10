@@ -4,6 +4,7 @@ metadata:
   name: {{ .Values.configMapName }}
   namespace: ingress-nginx
 data:
+
   SCHEDULE_ENABLED: "{{ .Values.SCHEDULE_ENABLED }}"
   SCHEDULE_INTERVAL_HOURS: "{{ .Values.SCHEDULE_INTERVAL_HOURS }}"
   SCHEDULE_TIMEZONE: "{{ .Values.SCHEDULE_TIMEZONE }}"
