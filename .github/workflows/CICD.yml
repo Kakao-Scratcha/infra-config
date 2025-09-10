@@ -131,7 +131,7 @@ jobs:
         
         # 시크릿 설정 상태 확인
         if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ]; then
-          echo "✅ Image repositories configured"
+          echo "Image repositories configured"
         else
-          echo "⚠️  Image repositories not configured - check secrets"
+          echo "Image repositories not configured - check secrets"
         fi

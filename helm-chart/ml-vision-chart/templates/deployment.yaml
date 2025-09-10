@@ -30,11 +30,12 @@ spec:
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
         env:
         - name: PROFILE
           value: "{{ .Values.profile }}"
-        - name: TZ
+        - name : TZ
           value: "Asia/Seoul"
         envFrom:
         - configMapRef:
@@ -46,7 +47,7 @@ spec:
         - secretRef:
             name: db-secret
         ports:
-        - containerPort: 8080
+        - containerPort: 8000
         {{- if .Values.autoscaling.enabled }}
         resources:
           requests:

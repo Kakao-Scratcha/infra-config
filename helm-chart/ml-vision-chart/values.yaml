@@ -3,22 +3,28 @@ fullnameOverride: "ml-vision"
 
 image:
   repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-ml-vision
-  tag: latest
+  tag: "20250905003933-29c17a9818f8284d9bbb367b980613e4bcf34e6a"
+  pullPolicy: IfNotPresent
 deployment:
   maxUnavailable: 0
   maxSurge: 1
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8080
+  targetPort: 8000
 configMapName: ml-vision-config
 profile: "local"
 
-# HPA 설정
+SCHEDULE_ENABLED: true
+SCHEDULED_QUIZ_COUNT: 10
+SCHEDULE_INTERVAL_HOURS: 1
+SCHEDULE_TIMEZONE: "Asia/Seoul"
+
+# HPA 설정 (FastAPI 서버용)
 autoscaling:
-  enabled: false  # Deployment 비활성화
-  minReplicas: 0
-  maxReplicas: 0 
+  enabled: true   # FastAPI Deployment 활성화
+  minReplicas: 1
+  maxReplicas: 1 
   targetCPUUtilizationPercentage: 60  
   targetMemoryUtilizationPercentage: 70
 
@@ -30,14 +36,4 @@ autoscaling:
   gpuLimit: 1
   gpuRequest: 1
 
-# CronJob 설정
-cronjob:
-  enabled: true
-  schedule: "*/5 * * * *"  # 5분마다
-  memoryRequest: "8Gi"
-  memoryLimit: "12Gi"
-  cpuRequest: "2000m"
-  cpuLimit: "3000m"
-  
-  # 퀴즈 생성 수량 설정 (모든 난이도 동일)
-  quizCount: 50      # 각 난이도별 퀴즈 생성 수
+

@@ -29,20 +29,40 @@ spec:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
+    {{- if .Values.autoscaling.targetRequestsPerSecond }}
+    # Ingress Controller의 요청 수 기반 스케일링
+    - type: Pods
+      pods:
+        metric:
+          name: nginx_ingress_controller_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: {{ .Values.autoscaling.targetRequestsPerSecond }}
+    {{- end }}
+    {{- if .Values.autoscaling.targetConcurrentConnections }}
+    # 동시 연결 수 기반 스케일링
+    - type: Pods
+      pods:
+        metric:
+          name: nginx_ingress_controller_connections
+        target:
+          type: AverageValue
+          averageValue: {{ .Values.autoscaling.targetConcurrentConnections }}
+    {{- end }}
   behavior:
     scaleDown:
-      stabilizationWindowSeconds: 300
+      stabilizationWindowSeconds: 300  # 5분으로 늘림 (네트워크 트래픽은 더 안정적)
       policies:
       - type: Percent
-        value: 10
-        periodSeconds: 60
+        value: 20
+        periodSeconds: 120
     scaleUp:
-      stabilizationWindowSeconds: 60
+      stabilizationWindowSeconds: 30 
       policies:
       - type: Percent
-        value: 50
+        value: 100
         periodSeconds: 30
       - type: Pods
-        value: 2
+        value: 3
         periodSeconds: 30
 {{- end }}

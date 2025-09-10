@@ -21,6 +21,9 @@ spec:
     metadata:
       labels:
         {{- include "api-chart.selectorLabels" . | nindent 8 }}
+        app: fastapi-app
+        "prometheus.io/scrape": "true"
+        "prometheus.io/port": "8001"
       annotations:
     spec:
       nodeSelector:
@@ -28,7 +31,7 @@ spec:
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: PROFILE
           value: "{{ .Values.profile }}"
