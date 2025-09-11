@@ -12,7 +12,7 @@ rabbitmq:
   persistence:
     enabled: true
     size: 8Gi
-    storageClass: standard                
+    storageClass: csi-cinder-sc-retain               
     accessModes:
       - ReadWriteOnce
   resources:
