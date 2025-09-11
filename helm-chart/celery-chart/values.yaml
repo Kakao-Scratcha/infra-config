@@ -1,0 +1,74 @@
+# Celery 차트 기본 설정
+fullnameOverride: "celery"
+
+# 이미지 설정
+image:
+  repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-backend
+  tag: "20250910052034-5efc33c05315fdbd42cf2430414bfe98241e5599"
+  pullPolicy: IfNotPresent
+
+# Celery Worker 설정
+worker:
+  enabled: true
+  replicas: 2
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1024Mi"
+      cpu: "500m"
+
+# Celery Beat 설정
+beat:
+  enabled: true
+  replicas: 1  # Beat는 반드시 1개만
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "250m"
+
+# RabbitMQ 설정
+rabbitmq:
+  enabled: true
+  # Bitnami RabbitMQ 차트 설정
+  auth:
+    username: "scratcha"  # 원하는 사용자명으로 변경
+    # password는 Secret에서 참조
+    existingSecret: "scratcha-secret"
+    existingSecretPasswordKey: "RABBITMQ_PASSWORD"
+  service:
+    type: ClusterIP
+    ports:
+      amqp: 5672
+      management: 15672
+  # Celery에서 사용할 연결 정보
+  connection:
+    username: "scratcha"  # RabbitMQ 사용자명과 동일하게 설정
+    host: "celery-chart-rabbitmq"  # Helm이 생성하는 서비스명
+    port: "5672"
+    vhost: "/"
+
+# Secret 설정
+secrets:
+  # 기존 Secret 참조 (권장)
+  existingSecret: "scratcha-secret"
+  # 또는 새 Secret 생성
+  # create: true
+  # data:
+  #   RABBITMQ_PASSWORD: "password"
+
+# 환경 설정
+profile: "production"
+timezone: "Asia/Seoul"
+
+# 노드 셀렉터
+nodeSelector:
+  kakaoi.io/kke-nodepool: team2-api
+
+# 이미지 풀 시크릿
+imagePullSecrets:
+  - name: kc-cr-secret

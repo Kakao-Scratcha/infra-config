@@ -1,0 +1,14 @@
+{{- if .Values.rabbitmq.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "celery-chart.fullname" . }}-config
+  labels:
+    {{- include "celery-chart.labels" . | nindent 4 }}
+data:
+  RABBITMQ_USER: {{ .Values.rabbitmq.username | quote }}
+  RABBITMQ_HOST: {{ .Values.rabbitmq.host | quote }}
+  RABBITMQ_PORT: {{ .Values.rabbitmq.port | quote }}
+  RABBITMQ_VHOST: {{ .Values.rabbitmq.vhost | quote }}
+  CELERY_RESULT_BACKEND: "rpc://"
+{{- end }}
