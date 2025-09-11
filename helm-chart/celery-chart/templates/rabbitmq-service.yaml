@@ -1,0 +1,20 @@
+{{- if .Values.rabbitmq.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "celery-chart.fullname" . }}-rabbitmq
+  namespace: ingress-nginx
+  labels:
+    {{- include "celery-chart.rabbitmqLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.rabbitmq.service.type }}
+  ports:
+  - port: {{ .Values.rabbitmq.service.ports.amqp }}
+    targetPort: amqp
+    name: amqp
+  - port: {{ .Values.rabbitmq.service.ports.management }}
+    targetPort: management
+    name: management
+  selector:
+    {{- include "celery-chart.rabbitmqSelectorLabels" . | nindent 4 }}
+{{- end }}

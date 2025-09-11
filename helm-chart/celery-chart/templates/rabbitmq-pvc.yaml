@@ -1,0 +1,18 @@
+{{- if .Values.rabbitmq.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "celery-chart.fullname" . }}-rabbitmq-pvc
+  namespace: ingress-nginx
+  labels:
+    {{- include "celery-chart.rabbitmqLabels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml .Values.rabbitmq.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.rabbitmq.persistence.size }}
+  {{- if .Values.rabbitmq.persistence.storageClass }}
+  storageClassName: {{ .Values.rabbitmq.persistence.storageClass }}
+  {{- end }}
+{{- end }}

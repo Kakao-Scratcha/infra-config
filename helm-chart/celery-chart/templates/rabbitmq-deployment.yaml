@@ -1,0 +1,50 @@
+{{- if .Values.rabbitmq.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "celery-chart.fullname" . }}-rabbitmq
+  namespace: ingress-nginx
+  labels:
+    {{- include "celery-chart.rabbitmqLabels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "celery-chart.rabbitmqSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "celery-chart.rabbitmqSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.rabbitmq.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.rabbitmq.nodeSelector | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: rabbitmq
+        image: bitnami/rabbitmq:3.12
+        env:
+        - name: RABBITMQ_USERNAME
+          value: {{ .Values.rabbitmq.auth.username | quote }}
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.rabbitmq.auth.existingSecret }}
+              key: {{ .Values.rabbitmq.auth.existingSecretPasswordKey }}
+        - name: RABBITMQ_ERLANG_COOKIE
+          value: "SWQOKODSQALRPCLNMEQG"
+        ports:
+        - containerPort: 5672
+          name: amqp
+        - containerPort: 15672
+          name: management
+        resources:
+          {{- toYaml .Values.rabbitmq.resources | nindent 10 }}
+        volumeMounts:
+        - name: rabbitmq-data
+          mountPath: /bitnami/rabbitmq
+      volumes:
+      - name: rabbitmq-data
+        persistentVolumeClaim:
+          claimName: {{ include "celery-chart.fullname" . }}-rabbitmq-pvc
+{{- end }}

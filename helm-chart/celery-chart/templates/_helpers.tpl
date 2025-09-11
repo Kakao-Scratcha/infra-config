@@ -79,3 +79,19 @@ Beat selector labels
 {{ include "celery-chart.selectorLabels" . }}
 app.kubernetes.io/component: beat
 {{- end }}
+
+{{/*
+RabbitMQ labels
+*/}}
+{{- define "celery-chart.rabbitmqLabels" -}}
+{{ include "celery-chart.labels" . }}
+app.kubernetes.io/component: rabbitmq
+{{- end }}
+
+{{/*
+RabbitMQ selector labels
+*/}}
+{{- define "celery-chart.rabbitmqSelectorLabels" -}}
+{{ include "celery-chart.selectorLabels" . }}
+app.kubernetes.io/component: rabbitmq
+{{- end }}
