@@ -1,3 +1,9 @@
+# 공통 이미지 설정 (api-chart와 동일)
+image:
+  repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-backend
+  tag: "20250910052034-5efc33c05315fdbd42cf2430414bfe98241e5599"
+  pullPolicy: IfNotPresent
+
 rabbitmq:
   enabled: true
   auth:
@@ -24,3 +30,66 @@ rabbitmq:
       cpu: "500m"
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
+
+# Celery Worker 설정
+worker:
+  enabled: true
+  replicas: 2
+  env:
+    profile: "production"
+    timezone: "Asia/Seoul"
+  envFrom:
+    - secretRef:
+        name: mysql-primary-secret
+    - secretRef:
+        name: mysql-secondary-secret
+    - secretRef:
+        name: jwt-secret
+    - secretRef:
+        name: mysql-url-secret
+    - secretRef:
+        name: backend-s3-url
+    - secretRef:
+        name: db-secret
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1024Mi"
+      cpu: "500m"
+  nodeSelector:
+    kakaoi.io/kke-nodepool: team2-api
+  imagePullSecrets:
+    - name: kc-cr-secret
+
+# Celery Beat 설정
+beat:
+  enabled: true
+  env:
+    profile: "production"
+    timezone: "Asia/Seoul"
+  envFrom:
+    - secretRef:
+        name: mysql-primary-secret
+    - secretRef:
+        name: mysql-secondary-secret
+    - secretRef:
+        name: jwt-secret
+    - secretRef:
+        name: mysql-url-secret
+    - secretRef:
+        name: backend-s3-url
+    - secretRef:
+        name: db-secret
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "250m"
+  nodeSelector:
+    kakaoi.io/kke-nodepool: team2-api
+  imagePullSecrets:
+    - name: kc-cr-secret

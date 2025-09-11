@@ -1,0 +1,70 @@
+{{- if .Values.beat.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "celery-chart.fullname" . }}-beat
+  namespace: ingress-nginx
+  labels:
+    {{- include "celery-chart.beatLabels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "celery-chart.beatSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "celery-chart.beatSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.beat.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.beat.nodeSelector | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: celery-beat
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["celery", "-A", "app.celery_app", "beat", "--loglevel=info"]
+        env:
+        - name: PROFILE
+          value: {{ .Values.beat.env.profile | quote }}
+        - name: TZ
+          value: {{ .Values.beat.env.timezone | quote }}
+        - name: RABBITMQ_HOST
+          value: {{ include "celery-chart.fullname" . }}-rabbitmq
+        - name: RABBITMQ_PORT
+          value: "5672"
+        - name: RABBITMQ_VHOST
+          value: "/"
+        - name: RABBITMQ_USER
+          value: {{ .Values.rabbitmq.auth.username }}
+        - name: CELERY_RESULT_BACKEND
+          value: "rpc://"
+        envFrom:
+        - secretRef:
+            name: mysql-primary-secret
+        - secretRef:
+            name: mysql-secondary-secret
+        - secretRef:
+            name: jwt-secret
+        - secretRef:
+            name: mysql-url-secret
+        - secretRef:
+            name: backend-s3-url
+        - secretRef:
+            name: db-secret
+        resources:
+          {{- toYaml .Values.beat.resources | nindent 10 }}
+        {{- if .Values.beat.livenessProbe }}
+        livenessProbe:
+          {{- toYaml .Values.beat.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.beat.readinessProbe }}
+        readinessProbe:
+          {{- toYaml .Values.beat.readinessProbe | nindent 10 }}
+        {{- end }}
+      {{- if .Values.beat.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.beat.imagePullSecrets | nindent 8 }}
+      {{- end }}
+{{- end }}

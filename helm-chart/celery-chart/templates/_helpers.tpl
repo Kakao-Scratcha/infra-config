@@ -63,3 +63,19 @@ Beat labels
 {{ include "celery-chart.labels" . }}
 app.kubernetes.io/component: beat
 {{- end }}
+
+{{/*
+Worker selector labels
+*/}}
+{{- define "celery-chart.workerSelectorLabels" -}}
+{{ include "celery-chart.selectorLabels" . }}
+app.kubernetes.io/component: worker
+{{- end }}
+
+{{/*
+Beat selector labels
+*/}}
+{{- define "celery-chart.beatSelectorLabels" -}}
+{{ include "celery-chart.selectorLabels" . }}
+app.kubernetes.io/component: beat
+{{- end }}

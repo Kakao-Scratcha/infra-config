@@ -8,6 +8,7 @@ on:
       - 'helm-chart/api-chart/**'
       - 'helm-chart/ml-vision-chart/**'
       - 'helm-chart/ml-behavior-chart/**'
+      - 'helm-chart/celery-chart/**'
       - '.github/workflows/CICD.yml'
   workflow_dispatch:
 
@@ -60,6 +61,12 @@ jobs:
         helm package .
         echo "ML Behavior chart packaged successfully"
         
+    - name: Package Celery Helm chart
+      run: |
+        cd helm-chart/celery-chart
+        helm package .
+        echo "Celery chart packaged successfully"
+        
         
     - name: Validate Front Helm chart
       run: |
@@ -84,6 +91,12 @@ jobs:
         cd helm-chart/ml-behavior-chart
         helm lint .
         echo "ML Behavior chart validation passed"
+        
+    - name: Validate Celery Helm chart
+      run: |
+        cd helm-chart/celery-chart
+        helm lint .
+        echo "Celery chart validation passed"
         
         
     - name: Update Helm chart values with secrets
@@ -132,27 +145,24 @@ jobs:
           fi
         fi
         
-        # Celery 차트 values.yaml에 이미지 레포지토리 추가
+        # Celery 차트 values.yaml에 API와 동일한 이미지 레포지토리 추가
         cd ../celery-chart
-        if [ -n "$CELERY_IMAGE_REPOSITORY" ]; then
-          # celeryImageRepository 필드가 없으면 추가
-          if ! grep -q "celeryImageRepository:" values.yaml; then
-            sed -i '/^image:/i celeryImageRepository: "'$CELERY_IMAGE_REPOSITORY'"' values.yaml
-          else
-            sed -i "s|celeryImageRepository:.*|celeryImageRepository: \"$CELERY_IMAGE_REPOSITORY\"|" values.yaml
-          fi
+        if [ -n "$API_IMAGE_REPOSITORY" ]; then
+          # API와 동일한 이미지 레포지토리 사용
+          sed -i "s|repository:.*|repository: \"$API_IMAGE_REPOSITORY\"|" values.yaml
+          echo "Celery chart updated with API image repository: $API_IMAGE_REPOSITORY"
         fi
         
         echo "Helm chart values updated with secrets"
         
     - name: Check Helm chart configuration
       run: |
-        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ] && [ -n "$CELERY_IMAGE_REPOSITORY" ]; then
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
           echo "API image repository: $API_IMAGE_REPOSITORY"
           echo "Frontend image repository: $FRONTEND_IMAGE_REPOSITORY"
           echo "ML Vision image repository: $ML_VISION_IMAGE_REPOSITORY"
           echo "ML Behavior image repository: $ML_BEHAVIOR_IMAGE_REPOSITORY"
-          echo "Celery image repository: $CELERY_IMAGE_REPOSITORY"
+          echo "Celery will use API image repository: $API_IMAGE_REPOSITORY"
         else
           echo "Warning: Image repositories not configured"
         fi
@@ -170,8 +180,9 @@ jobs:
         echo "ArgoCD will automatically sync when it detects changes in the helm-chart directory"
         
         # 시크릿 설정 상태 확인
-        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ] && [ -n "$CELERY_IMAGE_REPOSITORY" ]; then
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
           echo " Image repositories configured"
+          echo " Celery will use API image repository"
         else
           echo "  Image repositories not configured - check secrets"
         fi

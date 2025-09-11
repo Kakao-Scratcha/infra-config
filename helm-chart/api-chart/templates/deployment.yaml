@@ -37,6 +37,21 @@ spec:
           value: "{{ .Values.profile }}"
         - name: TZ
           value: "Asia/Seoul"
+        {{- if .Values.rabbitmq.enabled }}
+        - name: RABBITMQ_HOST
+          value: "{{ .Values.rabbitmq.host }}"
+        - name: RABBITMQ_PORT
+          value: "{{ .Values.rabbitmq.port }}"
+        - name: RABBITMQ_USER
+          value: "{{ .Values.rabbitmq.username }}"
+        - name: RABBITMQ_VHOST
+          value: "{{ .Values.rabbitmq.vhost }}"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.rabbitmq.existingSecret }}"
+              key: "{{ .Values.rabbitmq.existingSecretPasswordKey }}"
+        {{- end }}
         envFrom:
         - secretRef:
             name: mysql-primary-secret
