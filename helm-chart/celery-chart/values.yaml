@@ -15,9 +15,12 @@ rabbitmq:
     ports:
       amqp: 5672
       management: 15672
-  # PersistentVolume 비활성화 (메모리 기반)
+  # PersistentVolume 설정
   persistence:
-    enabled: false
+    enabled: true
+    storageClass: ""  # 기본 StorageClass 사용
+    size: "8Gi"
+    accessMode: "ReadWriteOnce"
   # 리소스 설정
   resources:
     requests:
