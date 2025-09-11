@@ -8,7 +8,6 @@ on:
       - 'helm-chart/api-chart/**'
       - 'helm-chart/ml-vision-chart/**'
       - 'helm-chart/ml-behavior-chart/**'
-      - 'helm-chart/rabbitmq-chart/**'
       - '.github/workflows/CICD.yml'
   workflow_dispatch:
 
@@ -18,7 +17,6 @@ env:
   FRONTEND_IMAGE_REPOSITORY: ${{ secrets.FRONTEND_IMAGE_REPOSITORY }}
   ML_VISION_IMAGE_REPOSITORY: ${{ secrets.ML_VISION_IMAGE_REPOSITORY }}
   ML_BEHAVIOR_IMAGE_REPOSITORY: ${{ secrets.ML_BEHAVIOR_IMAGE_REPOSITORY }}
-  RABBITMQ_IMAGE_REPOSITORY: ${{ secrets.RABBITMQ_IMAGE_REPOSITORY }}
 
 jobs:
   build-and-push:
@@ -62,11 +60,6 @@ jobs:
         helm package .
         echo "ML Behavior chart packaged successfully"
         
-    - name: Package RabbitMQ Helm chart
-      run: |
-        cd helm-chart/rabbitmq-chart
-        helm package .
-        echo "RabbitMQ chart packaged successfully"
         
     - name: Validate Front Helm chart
       run: |
@@ -92,11 +85,6 @@ jobs:
         helm lint .
         echo "ML Behavior chart validation passed"
         
-    - name: Validate RabbitMQ Helm chart
-      run: |
-        cd helm-chart/rabbitmq-chart
-        helm lint .
-        echo "RabbitMQ chart validation passed"
         
     - name: Update Helm chart values with secrets
       run: |
