@@ -38,7 +38,7 @@ rabbitmq:
   auth:
     username: "scratcha"  # 원하는 사용자명으로 변경
     # password는 Secret에서 참조
-    existingSecret: "scratcha-secret"
+    existingSecret: "backend-rabbitmq"
     existingSecretPasswordKey: "RABBITMQ_PASSWORD"
   service:
     type: ClusterIP
@@ -54,12 +54,7 @@ rabbitmq:
 
 # Secret 설정
 secrets:
-  # 기존 Secret 참조 (권장)
-  existingSecret: "scratcha-secret"
-  # 또는 새 Secret 생성
-  # create: true
-  # data:
-  #   RABBITMQ_PASSWORD: "password"
+  existingSecret: "backend-rabbitmq"
 
 # 환경 설정
 profile: "production"
