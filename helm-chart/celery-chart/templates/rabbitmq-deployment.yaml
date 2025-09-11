@@ -16,6 +16,8 @@ spec:
       labels:
         {{- include "celery-chart.rabbitmqSelectorLabels" . | nindent 8 }}
     spec:
+      securityContext:
+        fsGroup: {{ .Values.rabbitmq.securityContext.fsGroup }}
       {{- if .Values.rabbitmq.nodeSelector }}
       nodeSelector:
         {{- toYaml .Values.rabbitmq.nodeSelector | nindent 8 }}
@@ -23,6 +25,9 @@ spec:
       containers:
       - name: rabbitmq
         image: bitnami/rabbitmq:3.12
+        securityContext:
+          runAsUser: {{ .Values.rabbitmq.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.rabbitmq.securityContext.runAsGroup }}
         env:
         - name: RABBITMQ_USERNAME
           value: {{ .Values.rabbitmq.auth.username | quote }}
@@ -33,6 +38,8 @@ spec:
               key: {{ .Values.rabbitmq.auth.existingSecretPasswordKey }}
         - name: RABBITMQ_ERLANG_COOKIE
           value: "SWQOKODSQALRPCLNMEQG"
+        - name: BITNAMI_DEBUG
+          value: "true"
         ports:
         - containerPort: 5672
           name: amqp

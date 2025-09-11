@@ -30,6 +30,10 @@ rabbitmq:
       cpu: "500m"
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
+  securityContext:
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
 
 # Celery Worker 설정
 worker:
