@@ -1,6 +1,6 @@
 apiVersion: v2
-name: celery-chart
-description: A Helm chart for Celery Worker and Beat
+name: rabbitmq-chart
+description: A Helm chart for RabbitMQ
 type: application
 version: 0.1.0
 appVersion: "1.0"
