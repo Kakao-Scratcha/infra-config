@@ -1,13 +1,7 @@
-# RabbitMQ 차트 기본 설정
-fullnameOverride: "rabbitmq"
-
-# RabbitMQ 설정
 rabbitmq:
   enabled: true
-  # Bitnami RabbitMQ 차트 설정
   auth:
     username: "scratcha"
-    # password는 Secret에서 참조
     existingSecret: "backend-rabbitmq"
     existingSecretPasswordKey: "RABBITMQ_PASSWORD"
   service:
@@ -15,13 +9,12 @@ rabbitmq:
     ports:
       amqp: 5672
       management: 15672
-  # PersistentVolume 설정
   persistence:
     enabled: true
-    storageClass: ""  # 기본 StorageClass 사용
-    size: "8Gi"
-    accessMode: "ReadWriteOnce"
-  # 리소스 설정
+    size: 8Gi
+    storageClass: standard                
+    accessModes:
+      - ReadWriteOnce
   resources:
     requests:
       memory: "256Mi"
@@ -29,6 +22,5 @@ rabbitmq:
     limits:
       memory: "512Mi"
       cpu: "500m"
-  # 노드 셀렉터
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
