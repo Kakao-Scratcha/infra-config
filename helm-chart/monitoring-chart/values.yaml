@@ -41,13 +41,30 @@ kube-prometheus-stack:
       size: 1Gi
     resources:
       requests:
-        memory: "128Mi"
-        cpu: "50m"
-      limits:
         memory: "256Mi"
         cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "200m"
     nodeSelector:
       kakaoi.io/kke-nodepool: team2-api
+    # 시작 시간 늘리기
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
+    readinessProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+    livenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
     grafana.ini:
       server:
         root_url: "http://grafana.monitoring.svc.cluster.local:3000"
@@ -62,6 +79,10 @@ kube-prometheus-stack:
         disable_login_form: false
       feature_toggles:
         enable: "ngalert"
+      database:
+        max_open_conn: 10
+        max_idle_conn: 10
+        conn_max_lifetime: 14400
     datasources:
       datasources.yaml:
         apiVersion: 1
