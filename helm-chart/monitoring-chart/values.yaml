@@ -223,8 +223,14 @@ loki:
   enabled: true
   persistence:
     enabled: true
-    size: 5Gi
-    storageClassName: csi-cinder-sc-retain
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: csi-cinder-sc-retain
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
   replicas: 1
   backend:
     replicas: 1
