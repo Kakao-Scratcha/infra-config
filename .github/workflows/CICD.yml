@@ -74,6 +74,7 @@ jobs:
         helm dependency update
         helm package .
         echo "Monitoring chart packaged successfully"
+        echo "Note: Use --skip-crds flag when deploying to avoid CRD metadata issues"
         
         
     - name: Validate Front Helm chart
@@ -186,6 +187,9 @@ jobs:
         echo "Helm chart source code has been updated"
         echo "ArgoCD will automatically detect the change and deploy the new version"
         echo "No need to push chart package - ArgoCD reads from source directly"
+        echo ""
+        echo "IMPORTANT: For monitoring-chart deployment, use --skip-crds flag:"
+        echo "helm upgrade monitoring-chart ./monitoring-chart -n monitoring --skip-crds"
         
     - name: Notify deployment
       run: |
