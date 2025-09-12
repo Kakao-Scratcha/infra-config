@@ -12,15 +12,16 @@ loki:
     replicas: 1
   write:
     replicas: 1
-  # PVC 설정 (Grafana와 동일한 구조)
-  volumeClaimTemplate:
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 5Gi
-      storageClassName: csi-cinder-sc-retain
+  # Loki Helm 차트의 올바른 PVC 설정
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: csi-cinder-sc-retain
   resources:
     requests:
       memory: "512Mi"
