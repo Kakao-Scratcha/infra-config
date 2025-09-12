@@ -71,6 +71,7 @@ jobs:
     - name: Package Monitoring Helm chart
       run: |
         cd helm-chart/monitoring-chart
+        helm dependency update
         helm package .
         echo "Monitoring chart packaged successfully"
         
