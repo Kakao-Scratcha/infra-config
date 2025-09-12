@@ -1,0 +1,58 @@
+# 기본 설정
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 3100
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: loki.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Loki 설정
+loki:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: csi-cinder-sc-retain
+  replicas: 1
+  backend:
+    replicas: 1
+  write:
+    replicas: 1
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  nodeSelector:
+    kakaoi.io/kke-nodepool: team2-api
+  service:
+    type: ClusterIP
+    port: 3100
+
+# Promtail 설정 (Loki와 함께 로그 수집)
+promtail:
+  enabled: true
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  nodeSelector:
+    kakaoi.io/kke-nodepool: team2-api
