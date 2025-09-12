@@ -18,13 +18,15 @@ prometheus:
       port: 9090
     # 쿠버네티스 모니터링을 위한 설정
     extraArgs:
-      - --web.enable-lifecycle
-      - --web.enable-admin-api
+      web.enable-lifecycle: true
+      web.enable-admin-api: true
     # 쿠버네티스 서비스 디스커버리 설정
     serviceMonitor:
       enabled: true
       interval: 30s
       scrapeTimeout: 10s
+      labels:
+        app: prometheus
   alertmanager:
     enabled: true
     persistentVolume:
