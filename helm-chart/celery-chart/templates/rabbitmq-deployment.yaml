@@ -22,6 +22,15 @@ spec:
       nodeSelector:
         {{- toYaml .Values.rabbitmq.nodeSelector | nindent 8 }}
       {{- end }}
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1001:1001 /bitnami/rabbitmq"]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - mountPath: /bitnami/rabbitmq
+            name: rabbitmq-data
       containers:
       - name: rabbitmq
         image: bitnami/rabbitmq:3.12
