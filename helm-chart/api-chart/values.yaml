@@ -20,7 +20,7 @@ rabbitmq:
   enabled: true
   host: "celery-chart-rabbitmq"  # 같은 네임스페이스(ingress-nginx)에서 간단하게 참조
   port: "5672"
-  username: "scratcha"
+  username: "admin"
   vhost: "/"
   # 비밀번호는 Secret에서 참조
   existingSecret: "backend-rabbitmq"

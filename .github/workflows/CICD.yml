@@ -9,6 +9,7 @@ on:
       - 'helm-chart/ml-vision-chart/**'
       - 'helm-chart/ml-behavior-chart/**'
       - 'helm-chart/celery-chart/**'
+      - 'helm-chart/monitoring-chart/**'
       - '.github/workflows/CICD.yml'
   workflow_dispatch:
 
@@ -67,6 +68,12 @@ jobs:
         helm package .
         echo "Celery chart packaged successfully"
         
+    - name: Package Monitoring Helm chart
+      run: |
+        cd helm-chart/monitoring-chart
+        helm package .
+        echo "Monitoring chart packaged successfully"
+        
         
     - name: Validate Front Helm chart
       run: |
@@ -97,6 +104,12 @@ jobs:
         cd helm-chart/celery-chart
         helm lint .
         echo "Celery chart validation passed"
+        
+    - name: Validate Monitoring Helm chart
+      run: |
+        cd helm-chart/monitoring-chart
+        helm lint .
+        echo "Monitoring chart validation passed"
         
         
     - name: Update Helm chart values with secrets
