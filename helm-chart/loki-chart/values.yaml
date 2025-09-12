@@ -69,6 +69,20 @@ loki:
   service:
     type: ClusterIP
     port: 3100
+  # 프록시 환경변수 설정
+  extraEnv:
+    - name: HTTP_PROXY
+      value: "http://10.0.130.50:3128"
+    - name: HTTPS_PROXY
+      value: "http://10.0.130.50:3128"
+    - name: NO_PROXY
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
+    - name: http_proxy
+      value: "http://10.0.130.50:3128"
+    - name: https_proxy
+      value: "http://10.0.130.50:3128"
+    - name: no_proxy
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
 
 # Promtail 설정 (Loki와 함께 로그 수집)
 promtail:
@@ -82,3 +96,17 @@ promtail:
       cpu: "200m"
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
+  # Promtail 프록시 환경변수 설정
+  extraEnv:
+    - name: HTTP_PROXY
+      value: "http://10.0.130.50:3128"
+    - name: HTTPS_PROXY
+      value: "http://10.0.130.50:3128"
+    - name: NO_PROXY
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
+    - name: http_proxy
+      value: "http://10.0.130.50:3128"
+    - name: https_proxy
+      value: "http://10.0.130.50:3128"
+    - name: no_proxy
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
