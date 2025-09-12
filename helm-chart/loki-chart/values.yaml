@@ -5,13 +5,22 @@ loki:
   enabled: true
   persistence:
     enabled: true
-    size: 5Gi
     storageClassName: csi-cinder-sc-retain
+    size: 5Gi
   replicas: 1
   backend:
     replicas: 1
   write:
     replicas: 1
+  # PVC 설정 (Grafana와 동일한 구조)
+  volumeClaimTemplate:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: csi-cinder-sc-retain
   resources:
     requests:
       memory: "512Mi"
