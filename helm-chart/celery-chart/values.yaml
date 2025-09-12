@@ -34,6 +34,8 @@ rabbitmq:
     runAsUser: 1001
     runAsGroup: 1001
     fsGroup: 1001
+  volumePermissions:
+    enabled: true
 
 # Celery Worker 설정
 worker:
