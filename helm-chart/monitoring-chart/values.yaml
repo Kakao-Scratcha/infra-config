@@ -31,10 +31,9 @@ kube-prometheus-stack:
   # Grafana 설정
   grafana:
     enabled: true
-    admin:
-      existingSecret: "grafana-admin-secret"
-      userKey: "admin-user"
-      passwordKey: "admin-password"
+  admin:
+    user: admin
+    password: admin123
     persistence:
       enabled: true
       storageClassName: csi-cinder-sc-retain
@@ -73,16 +72,6 @@ kube-prometheus-stack:
         org_role: Admin
       security:
         allow_embedding: true
-      users:
-        allow_sign_up: false
-      auth:
-        disable_login_form: false
-      feature_toggles:
-        enable: "ngalert"
-      database:
-        max_open_conn: 10
-        max_idle_conn: 10
-        conn_max_lifetime: 14400
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -116,29 +105,9 @@ kube-prometheus-stack:
           gnetId: 6417
           revision: 1
           datasource: Prometheus
-        # 쿠버네티스 노드 모니터링
-        kubernetes-node-monitoring:
-          gnetId: 1860
-          revision: 27
-          datasource: Prometheus
-        # 쿠버네티스 네임스페이스 모니터링
-        kubernetes-namespace-monitoring:
-          gnetId: 16270
-          revision: 1
-          datasource: Prometheus
-        # 쿠버네티스 워크로드 모니터링
-        kubernetes-workload-monitoring:
-          gnetId: 15759
-          revision: 1
-          datasource: Prometheus
         # Prometheus 자체 모니터링
         prometheus-monitoring:
           gnetId: 3662
-          revision: 1
-          datasource: Prometheus
-        # AlertManager 모니터링
-        alertmanager-monitoring:
-          gnetId: 9578
           revision: 1
           datasource: Prometheus
 
