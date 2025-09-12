@@ -21,7 +21,7 @@ prometheus:
     persistentVolume:
       enabled: true
       size: 2Gi
-      storageClassName: csi-cinder-sc-retain
+      storageClass: csi-cinder-sc-retain
     resources:
       requests:
         memory: "256Mi"
@@ -130,11 +130,11 @@ grafana:
 
 # Loki 설정
 loki:
-  enabled: false
+  enabled: true
   persistence:
     enabled: true
     size: 5Gi
-    storageClass: csi-cinder-sc-retain
+    storageClassName: csi-cinder-sc-retain
   replicas: 1
   backend:
     replicas: 1
@@ -157,7 +157,7 @@ loki:
 
 # Promtail 설정
 promtail:
-  enabled: false
+  enabled: true
   resources:
     requests:
       memory: "128Mi"
@@ -175,7 +175,7 @@ alertmanager:
   persistentVolume:
     enabled: true
     size: 1Gi
-    storageClassName: csi-cinder-sc-retain
+    storageClass: csi-cinder-sc-retain
   resources:
     requests:
       memory: "256Mi"
