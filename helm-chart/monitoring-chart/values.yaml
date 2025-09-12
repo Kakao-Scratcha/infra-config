@@ -130,7 +130,7 @@ grafana:
 
 # Loki 설정
 loki:
-  enabled: true
+  enabled: false
   persistence:
     enabled: true
     size: 5Gi
@@ -157,7 +157,7 @@ loki:
 
 # Promtail 설정
 promtail:
-  enabled: true
+  enabled: false
   resources:
     requests:
       memory: "128Mi"
