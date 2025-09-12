@@ -31,11 +31,9 @@ rabbitmq:
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
   securityContext:
-    runAsUser: 1001
-    runAsGroup: 1001
-    fsGroup: 1001
-  volumePermissions:
-    enabled: true
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
 
 # Celery Worker 설정
 worker:
