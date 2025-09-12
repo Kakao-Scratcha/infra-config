@@ -55,10 +55,12 @@ kube-prometheus-stack:
       timeoutSeconds: 5
       failureThreshold: 30
     readinessProbe:
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      timeoutSeconds: 3
-      failureThreshold: 3
+      httpGet:
+        path: /api/health
+        port: 3000
+      initialDelaySeconds: 60
+      timeoutSeconds: 5
+      failureThreshold: 10
     livenessProbe:
       initialDelaySeconds: 30
       periodSeconds: 10
