@@ -10,6 +10,8 @@ rabbitmq:
     username: "scratcha"
     existingSecret: "backend-rabbitmq"
     existingSecretPasswordKey: "RABBITMQ_PASSWORD"
+  extraConfiguration: |
+    loopback_users.guest = false
   service:
     type: ClusterIP
     ports:
