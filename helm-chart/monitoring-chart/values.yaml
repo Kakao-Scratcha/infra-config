@@ -93,7 +93,7 @@ kube-prometheus-stack:
             isDefault: true
           - name: Loki
             type: loki
-            url: http://loki-chart-loki:3100
+            url: http://loki-gateway:80
             access: proxy
             isDefault: false
     dashboardProviders:
