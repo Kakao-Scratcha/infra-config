@@ -16,6 +16,15 @@ prometheus:
     service:
       type: ClusterIP
       port: 9090
+    # 쿠버네티스 모니터링을 위한 설정
+    extraArgs:
+      - --web.enable-lifecycle
+      - --web.enable-admin-api
+    # 쿠버네티스 서비스 디스커버리 설정
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      scrapeTimeout: 10s
   alertmanager:
     enabled: true
     persistentVolume:
@@ -88,6 +97,12 @@ grafana:
       org_role: Admin
     security:
       allow_embedding: true
+    users:
+      allow_sign_up: false
+    auth:
+      disable_login_form: false
+    feature_toggles:
+      enable: "ngalert"
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -115,18 +130,46 @@ grafana:
             path: /var/lib/grafana/dashboards/default
   dashboards:
     default:
+      # 쿠버네티스 클러스터 모니터링
       kubernetes-cluster-monitoring:
         gnetId: 7249
         revision: 1
         datasource: Prometheus
+      # 쿠버네티스 파드 모니터링
       kubernetes-pod-monitoring:
         gnetId: 6417
         revision: 1
         datasource: Prometheus
+      # 쿠버네티스 노드 모니터링
+      kubernetes-node-monitoring:
+        gnetId: 1860
+        revision: 27
+        datasource: Prometheus
+      # 쿠버네티스 네임스페이스 모니터링
+      kubernetes-namespace-monitoring:
+        gnetId: 16270
+        revision: 1
+        datasource: Prometheus
+      # 쿠버네티스 워크로드 모니터링
+      kubernetes-workload-monitoring:
+        gnetId: 15759
+        revision: 1
+        datasource: Prometheus
+      # 쿠버네티스 로그
       kubernetes-logs:
         gnetId: 15141
         revision: 1
         datasource: Loki
+      # Prometheus 자체 모니터링
+      prometheus-monitoring:
+        gnetId: 3662
+        revision: 1
+        datasource: Prometheus
+      # AlertManager 모니터링
+      alertmanager-monitoring:
+        gnetId: 9578
+        revision: 1
+        datasource: Prometheus
 
 # Loki 설정
 loki:
