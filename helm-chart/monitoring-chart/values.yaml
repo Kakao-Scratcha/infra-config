@@ -21,7 +21,7 @@ prometheus:
     persistentVolume:
       enabled: true
       size: 2Gi
-      storageClass: csi-cinder-sc-retain
+      storageClassName: csi-cinder-sc-retain
     resources:
       requests:
         memory: "256Mi"
@@ -67,7 +67,7 @@ grafana:
   persistence:
     enabled: true
     size: 2Gi
-    storageClass: csi-cinder-sc-retain
+    storageClassName: csi-cinder-sc-retain
   resources:
     requests:
       memory: "256Mi"
@@ -175,7 +175,7 @@ alertmanager:
   persistentVolume:
     enabled: true
     size: 1Gi
-    storageClass: csi-cinder-sc-retain
+    storageClassName: csi-cinder-sc-retain
   resources:
     requests:
       memory: "256Mi"
