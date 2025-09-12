@@ -66,15 +66,15 @@ grafana:
     passwordKey: "admin-password"
   persistence:
     enabled: true
-    size: 5Gi
+    size: 2Gi
     storageClass: csi-cinder-sc-retain
   resources:
     requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
       memory: "512Mi"
       cpu: "250m"
-    limits:
-      memory: "1Gi"
-      cpu: "500m"
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
   service:
@@ -133,8 +133,13 @@ loki:
   enabled: true
   persistence:
     enabled: true
-    size: 10Gi
+    size: 5Gi
     storageClass: csi-cinder-sc-retain
+  replicas: 1
+  backend:
+    replicas: 1
+  write:
+    replicas: 1
   resources:
     requests:
       memory: "512Mi"
@@ -169,7 +174,7 @@ alertmanager:
   enabled: true
   persistentVolume:
     enabled: true
-    size: 2Gi
+    size: 1Gi
     storageClass: csi-cinder-sc-retain
   resources:
     requests:
