@@ -11,7 +11,7 @@ rabbitmq:
     existingSecret: "backend-rabbitmq"
     existingSecretPasswordKey: "RABBITMQ_PASSWORD"
   extraConfiguration: |
-    loopback_users.guest = false
+    loopback_users.guest = none
   service:
     type: ClusterIP
     ports:
