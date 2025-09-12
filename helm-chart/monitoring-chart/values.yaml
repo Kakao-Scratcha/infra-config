@@ -1,6 +1,9 @@
 # kube-prometheus-stack 설정
 kube-prometheus-stack:
   enabled: true
+  # CRD 생성 비활성화
+  crds:
+    create: false
   
   # Prometheus 설정
   prometheus:
