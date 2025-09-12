@@ -24,9 +24,10 @@ kube-prometheus-stack:
           cpu: "500m"
       nodeSelector:
         kakaoi.io/kke-nodepool: team2-api
-      serviceMonitorSelectorNilUsesHelmValues: false
-      podMonitorSelectorNilUsesHelmValues: false
-      ruleSelectorNilUsesHelmValues: false
+      # 기본 설정 사용
+      # serviceMonitorSelectorNilUsesHelmValues: false
+      # podMonitorSelectorNilUsesHelmValues: false
+      # ruleSelectorNilUsesHelmValues: false
 
   # Grafana 설정
   grafana:
@@ -167,34 +168,17 @@ kube-prometheus-stack:
     serviceMonitor:
       interval: 30s
 
-  # 기본 서비스 모니터링 활성화
+  # 기본 서비스 모니터링 활성화 (단순화)
   defaultRules:
     create: true
     rules:
       alertmanager: true
-      etcd: true
       general: true
       k8s: true
-      kubeApiserver: true
-      kubeApiserverAvailability: true
-      kubeApiserverError: true
-      kubeApiserverSlos: true
       kubelet: true
-      kubeProxy: true
-      kubePrometheusGeneral: true
-      kubePrometheusNodeRecording: true
-      kubernetesApps: true
-      kubernetesResources: true
-      kubernetesStorage: true
-      kubernetesSystem: true
-      kubeScheduler: true
       kubeStateMetrics: true
-      network: true
       node: true
-      nodeExporterAlerting: true
-      nodeExporterRecording: true
       prometheus: true
-      prometheusOperator: true
 
   # 네임스페이스 설정
   namespaceOverride: "monitoring"
