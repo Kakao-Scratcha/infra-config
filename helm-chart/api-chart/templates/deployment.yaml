@@ -65,6 +65,8 @@ spec:
             name: backend-s3-url
         - secretRef:
             name: db-secret
+        - secretRef:
+            name: backend-rabbitmq
         ports:
         - containerPort: 8001
         {{- if .Values.autoscaling.enabled }}
