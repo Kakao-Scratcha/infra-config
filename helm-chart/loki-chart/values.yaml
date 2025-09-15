@@ -39,7 +39,7 @@ loki:
   # PVC 비활성화 (S3 스토리지 사용)
   persistence:
     enabled: false
-  # 스키마 설정
+  # 스키마 설정 (Loki 6.0.0 필수)
   schemaConfig:
     configs:
       - from: 2020-10-24
@@ -51,7 +51,7 @@ loki:
           period: 24h
   # 스토리지 설정
   storage_config:
-    boltdb_shipper:
+    tsdb_shipper:
       active_index_directory: /tmp/loki/index   # PVC 안 쓰도록 tmpfs 지정
       shared_store: s3
     aws:
