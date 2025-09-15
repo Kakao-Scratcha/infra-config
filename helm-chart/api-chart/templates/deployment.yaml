@@ -39,18 +39,30 @@ spec:
           value: "Asia/Seoul"
         {{- if .Values.rabbitmq.enabled }}
         - name: RABBITMQ_HOST
-          value: "rabbitmq-celery-chart-rabbitmq"
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_HOST
         - name: RABBITMQ_PORT
-          value: "{{ .Values.rabbitmq.port }}"
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_PORT
         - name: RABBITMQ_USER
-          value: "{{ .Values.rabbitmq.username }}"
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_USER
         - name: RABBITMQ_VHOST
-          value: "{{ .Values.rabbitmq.vhost }}"
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_VHOST
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: "{{ .Values.rabbitmq.existingSecret }}"
-              key: "{{ .Values.rabbitmq.existingSecretPasswordKey }}"
+              name: backend-rabbitmq
+              key: RABBITMQ_PASSWORD
         {{- end }}
         envFrom:
         - secretRef:
