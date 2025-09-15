@@ -82,6 +82,23 @@ kube-prometheus-stack:
         allow_sign_up: false
       auth:
         disable_login_form: false
+      plugins:
+        allow_loading_unsigned_plugins: "*"
+      plugin_admin:
+        allow_loading_unsigned_plugins: "*"
+    extraEnv:
+      - name: HTTP_PROXY
+        value: "http://10.0.130.50:3128"
+      - name: HTTPS_PROXY
+        value: "http://10.0.130.50:3128"
+      - name: NO_PROXY
+        value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
+      - name: http_proxy
+        value: "http://10.0.130.50:3128"
+      - name: https_proxy
+        value: "http://10.0.130.50:3128"
+      - name: no_proxy
+        value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
     datasources:
       datasources.yaml:
         apiVersion: 1
