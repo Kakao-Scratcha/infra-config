@@ -53,6 +53,8 @@ spec:
             name: backend-s3-url
         - secretRef:
             name: db-secret
+        - secretRef:
+            name: backend-rabbitmq
         resources:
           {{- toYaml .Values.beat.resources | nindent 10 }}
         {{- if .Values.beat.livenessProbe }}
