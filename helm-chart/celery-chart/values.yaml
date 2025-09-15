@@ -44,6 +44,9 @@ worker:
   env:
     profile: "production"
     timezone: "Asia/Seoul"
+    # RabbitMQ 연결 설정
+    CELERY_BROKER_URL: "amqp://celery:${RABBITMQ_PASSWORD}@rabbitmq-celery-chart-rabbitmq:5672//"
+    CELERY_RESULT_BACKEND: "rpc://"
   envFrom:
     - secretRef:
         name: mysql-primary-secret
@@ -57,6 +60,8 @@ worker:
         name: backend-s3-url
     - secretRef:
         name: db-secret
+    - secretRef:
+        name: backend-rabbitmq
   resources:
     requests:
       memory: "512Mi"
@@ -75,6 +80,9 @@ beat:
   env:
     profile: "production"
     timezone: "Asia/Seoul"
+    # RabbitMQ 연결 설정
+    CELERY_BROKER_URL: "amqp://celery:${RABBITMQ_PASSWORD}@rabbitmq-celery-chart-rabbitmq:5672//"
+    CELERY_RESULT_BACKEND: "rpc://"
   envFrom:
     - secretRef:
         name: mysql-primary-secret
@@ -88,6 +96,8 @@ beat:
         name: backend-s3-url
     - secretRef:
         name: db-secret
+    - secretRef:
+        name: backend-rabbitmq
   resources:
     requests:
       memory: "256Mi"
