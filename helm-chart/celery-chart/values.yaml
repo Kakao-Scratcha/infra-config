@@ -8,7 +8,7 @@ rabbitmq:
   enabled: true
   auth:
     username: "celery"
-    existingSecret: "backend-rabbitmq"
+    existingSecret: "rabbitmq-secret"
     existingSecretPasswordKey: "RABBITMQ_PASSWORD"
   extraConfiguration: |
     loopback_users.guest = none
@@ -97,7 +97,7 @@ beat:
     - secretRef:
         name: db-secret
     - secretRef:
-        name: backend-rabbitmq
+        name: backend-secret
   resources:
     requests:
       memory: "256Mi"
