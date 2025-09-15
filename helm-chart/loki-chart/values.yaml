@@ -1,13 +1,34 @@
 # Loki 차트 기본 설정
 
-# Loki 설정
+# Loki 설정 (단일 모드)
 loki:
   enabled: true
   replicas: 1
+  # 마이크로서비스 모드 비활성화 (단일 모드)
+  singleBinary:
+    enabled: true
   backend:
-    replicas: 1
+    enabled: false
   write:
-    replicas: 1
+    enabled: false
+  read:
+    enabled: false
+  gateway:
+    enabled: false
+  queryScheduler:
+    enabled: false
+  indexGateway:
+    enabled: false
+  compactor:
+    enabled: false
+  distributor:
+    enabled: false
+  ingester:
+    enabled: false
+  querier:
+    enabled: false
+  queryFrontend:
+    enabled: false
   # Loki S3 호환 오브젝트 스토리지 설정 (Kubernetes Secret 사용)
   storage:
     type: s3
@@ -66,19 +87,6 @@ loki:
   # PVC 비활성화 (S3 스토리지 사용)
   persistence:
     enabled: false
-  # 각 컴포넌트별 PVC 비활성화
-  backend:
-    persistence:
-      enabled: false
-  write:
-    persistence:
-      enabled: false
-  read:
-    persistence:
-      enabled: false
-  gateway:
-    persistence:
-      enabled: false
   resources:
     requests:
       memory: "512Mi"
