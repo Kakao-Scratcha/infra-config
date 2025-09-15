@@ -33,33 +33,34 @@ loki:
     enabled: false
   queryFrontend:
     enabled: false
-  # Loki S3 호환 오브젝트 스토리지 설정 (Kubernetes Secret 사용)
-  storage:
-    type: s3
   # PVC 비활성화 (S3 스토리지 사용)
   persistence:
     enabled: false
-  # 스키마 설정 (Loki 6.0.0 필수)
-  schemaConfig:
-    configs:
-      - from: 2020-10-24
-        store: tsdb
-        object_store: s3
-        schema: v12
-        index:
-          prefix: index_
-          period: 24h
-  # 스토리지 설정
-  storage_config:
-    tsdb_shipper:
-      active_index_directory: /tmp/loki/index   # PVC 안 쓰도록 tmpfs 지정
-      shared_store: s3
-    aws:
-      endpoint: ${LOKI_S3_ENDPOINT}
-      bucketnames: ${LOKI_S3_BUCKET}
-      access_key_id: ${LOKI_S3_ACCESS_KEY}
-      secret_access_key: ${LOKI_S3_SECRET_KEY}
-      s3forcepathstyle: true
+  
+  # 🚀 Loki 6.x 버전부터 config 아래로 이동
+  config:
+    # 스키마 설정
+    schemaConfig:
+      configs:
+        - from: 2020-10-24
+          store: tsdb
+          object_store: s3
+          schema: v12
+          index:
+            prefix: index_
+            period: 24h
+    # 스토리지 설정
+    storage_config:
+      tsdb_shipper:
+        active_index_directory: /tmp/loki/index # PVC 안 쓰도록 tmpfs 지정
+        shared_store: s3
+      aws:
+        endpoint: ${LOKI_S3_ENDPOINT}
+        bucketnames: ${LOKI_S3_BUCKET}
+        access_key_id: ${LOKI_S3_ACCESS_KEY}
+        secret_access_key: ${LOKI_S3_SECRET_KEY}
+        s3forcepathstyle: true
+        
   # 환경변수 설정 (S3 Secret + 프록시)
   extraEnv:
     # S3 스토리지 설정 (Kubernetes Secret에서 로드)
