@@ -29,8 +29,8 @@ loki:
     enabled: false
   persistence:
     enabled: false
-  config:
-    schemaConfig:
+  config: |
+    schema_config:
       configs:
         - from: 2020-10-24
           store: tsdb
