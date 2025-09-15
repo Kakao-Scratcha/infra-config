@@ -39,7 +39,7 @@ spec:
           value: "Asia/Seoul"
         {{- if .Values.rabbitmq.enabled }}
         - name: RABBITMQ_HOST
-          value: "{{ .Values.rabbitmq.host }}"
+          value: "rabbitmq-celery-chart-rabbitmq"
         - name: RABBITMQ_PORT
           value: "{{ .Values.rabbitmq.port }}"
         - name: RABBITMQ_USER

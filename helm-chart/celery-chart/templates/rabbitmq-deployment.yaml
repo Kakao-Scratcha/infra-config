@@ -40,6 +40,8 @@ spec:
           value: "SWQOKODSQALRPCLNMEQG"
         - name: BITNAMI_DEBUG
           value: "true"
+        - name: RABBITMQ_EXTRA_CONF
+          value: "loopback_users = none"
         ports:
         - containerPort: 5672
           name: amqp
