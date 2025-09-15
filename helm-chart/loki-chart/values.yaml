@@ -1,54 +1,45 @@
+# Single Binary 모드 설정
+deploymentMode: SingleBinary
+
 loki:
   enabled: true
+  commonConfig:
+    replication_factor: 1
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  limits_config:
+    allow_structured_metadata: true
+    volume_enabled: true
+    retention_period: 168h # 7일 보존
+  storage:
+    type: s3
+    bucketNames:
+      chunks: ${LOKI_S3_BUCKET}
+      ruler: ${LOKI_S3_BUCKET}
+      admin: ${LOKI_S3_BUCKET}
+    s3:
+      endpoint: ${LOKI_S3_ENDPOINT}
+      region: kr-central-2
+      secretAccessKey: ${LOKI_S3_SECRET_KEY}
+      accessKeyId: ${LOKI_S3_ACCESS_KEY}
+      s3ForcePathStyle: true
+      insecure: false
+
+singleBinary:
   replicas: 1
-  singleBinary:
-    enabled: true
-    persistence:
-      enabled: false
-  backend:
-    enabled: false
-  write:
-    enabled: false
-  read:
-    enabled: false
-  gateway:
-    enabled: false
-  queryScheduler:
-    enabled: false
-  indexGateway:
-    enabled: false
-  compactor:
-    enabled: false
-  distributor:
-    enabled: false
-  ingester:
-    enabled: false
-  querier:
-    enabled: false
-  queryFrontend:
-    enabled: false
   persistence:
-    enabled: false
-  config: |
-    schema_config:
-      configs:
-        - from: 2020-10-24
-          store: tsdb
-          object_store: s3
-          schema: v12
-          index:
-            prefix: index_
-            period: 24h
-    storage_config:
-      tsdb_shipper:
-        active_index_directory: /tmp/loki/index
-        shared_store: s3
-      aws:
-        endpoint: ${LOKI_S3_ENDPOINT}
-        bucketnames: ${LOKI_S3_BUCKET}
-        access_key_id: ${LOKI_S3_ACCESS_KEY}
-        secret_access_key: ${LOKI_S3_SECRET_KEY}
-        s3forcepathstyle: true
+    enabled: true
+    storageClass: csi-cinder-sc-retain
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
   extraEnv:
     - name: LOKI_S3_ENDPOINT
       valueFrom:
@@ -94,6 +85,34 @@ loki:
   service:
     type: ClusterIP
     port: 3100
+
+# 다른 배포 모드들은 비활성화
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+gateway:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+indexGateway:
+  replicas: 0
+compactor:
+  replicas: 0
+distributor:
+  replicas: 0
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+
+# MinIO 비활성화
+minio:
+  enabled: false
 promtail:
   enabled: true
   resources:
