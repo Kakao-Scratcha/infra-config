@@ -34,7 +34,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
   #메모리 제한 설정
-  memoryLimit: "1500Mi"
-  memoryRequest: "1000Mi"
+  memoryLimit: "2000Mi"
+  memoryRequest: "1500Mi"
   cpuLimit: "1000m"
   cpuRequest: "500m"
