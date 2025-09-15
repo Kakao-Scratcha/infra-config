@@ -1,16 +1,10 @@
-# Loki 차트 기본 설정
-
-# Loki 설정 (단일 모드)
 loki:
   enabled: true
   replicas: 1
-  # 단일 바이너리 모드 활성화
   singleBinary:
     enabled: true
-    # singleBinary 모드의 PVC 비활성화
     persistence:
       enabled: false
-  # 모든 마이크로서비스 컴포넌트 비활성화
   backend:
     enabled: false
   write:
@@ -33,13 +27,9 @@ loki:
     enabled: false
   queryFrontend:
     enabled: false
-  # PVC 비활성화 (S3 스토리지 사용)
   persistence:
     enabled: false
-  
-  # 🚀 Loki 6.x 버전부터 config 아래로 이동
   config:
-    # 스키마 설정
     schemaConfig:
       configs:
         - from: 2020-10-24
@@ -49,10 +39,9 @@ loki:
           index:
             prefix: index_
             period: 24h
-    # 스토리지 설정
     storage_config:
       tsdb_shipper:
-        active_index_directory: /tmp/loki/index # PVC 안 쓰도록 tmpfs 지정
+        active_index_directory: /tmp/loki/index
         shared_store: s3
       aws:
         endpoint: ${LOKI_S3_ENDPOINT}
@@ -60,10 +49,7 @@ loki:
         access_key_id: ${LOKI_S3_ACCESS_KEY}
         secret_access_key: ${LOKI_S3_SECRET_KEY}
         s3forcepathstyle: true
-        
-  # 환경변수 설정 (S3 Secret + 프록시)
   extraEnv:
-    # S3 스토리지 설정 (Kubernetes Secret에서 로드)
     - name: LOKI_S3_ENDPOINT
       valueFrom:
         secretKeyRef:
@@ -84,7 +70,6 @@ loki:
         secretKeyRef:
           name: loki-s3-secret
           key: secret-key
-    # 프록시 환경변수 설정
     - name: HTTP_PROXY
       value: "http://10.0.130.50:3128"
     - name: HTTPS_PROXY
@@ -109,8 +94,6 @@ loki:
   service:
     type: ClusterIP
     port: 3100
-
-# Promtail 설정 (Loki와 함께 로그 수집)
 promtail:
   enabled: true
   resources:
@@ -122,7 +105,6 @@ promtail:
       cpu: "200m"
   nodeSelector:
     kakaoi.io/kke-nodepool: team2-api
-  # Promtail 프록시 환경변수 설정
   extraEnv:
     - name: HTTP_PROXY
       value: "http://10.0.130.50:3128"
