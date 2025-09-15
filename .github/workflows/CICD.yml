@@ -10,6 +10,7 @@ on:
       - 'helm-chart/ml-behavior-chart/**'
       - 'helm-chart/celery-chart/**'
       - 'helm-chart/monitoring-chart/**'
+      - 'helm-chart/loki-chart/**'
       - '.github/workflows/CICD.yml'
   workflow_dispatch:
 
@@ -32,6 +33,7 @@ jobs:
       uses: azure/setup-helm@v3
       with:
         version: v3.12.0
+        
         
     - name: Configure Git
       run: |
@@ -76,6 +78,13 @@ jobs:
         echo "Monitoring chart packaged successfully"
         echo "Note: Use --skip-crds flag when deploying to avoid CRD metadata issues"
         
+    - name: Package Loki Helm chart
+      run: |
+        cd helm-chart/loki-chart
+        helm package .
+        echo "Loki chart packaged successfully"
+        
+        
         
     - name: Validate Front Helm chart
       run: |
@@ -112,6 +121,12 @@ jobs:
         cd helm-chart/monitoring-chart
         helm lint .
         echo "Monitoring chart validation passed"
+        
+    - name: Validate Loki Helm chart
+      run: |
+        cd helm-chart/loki-chart
+        helm lint .
+        echo "Loki chart validation passed"
         
         
     - name: Update Helm chart values with secrets
@@ -175,6 +190,9 @@ jobs:
           echo "Celery chart tag synchronized with API chart: $API_TAG"
         fi
         
+        # Loki S3 Secret은 수동으로 관리
+        echo "Loki S3 Secret should be created manually before deployment"
+        
         echo "Helm chart values updated with secrets"
         
     - name: Check Helm chart configuration
@@ -189,6 +207,9 @@ jobs:
           echo "Warning: Image repositories not configured"
         fi
         
+        # Loki S3 설정은 수동으로 관리
+        echo "Loki S3 storage configuration managed manually via Kubernetes Secret"
+        
     - name: Notify ArgoCD deployment
       run: |
         echo "Helm chart source code has been updated"
@@ -197,6 +218,14 @@ jobs:
         echo ""
         echo "IMPORTANT: For monitoring-chart deployment, use --skip-crds flag:"
         echo "helm upgrade monitoring-chart ./monitoring-chart -n monitoring --skip-crds"
+        echo ""
+        echo "IMPORTANT: For Loki deployment, create the S3 secret manually first:"
+        echo "kubectl create secret generic loki-s3-secret \\"
+        echo "  --from-literal=endpoint='YOUR_S3_ENDPOINT' \\"
+        echo "  --from-literal=bucket='YOUR_BUCKET_NAME' \\"
+        echo "  --from-literal=access-key='YOUR_ACCESS_KEY' \\"
+        echo "  --from-literal=secret-key='YOUR_SECRET_KEY' \\"
+        echo "  -n monitoring"
         
     - name: Notify deployment
       run: |
@@ -211,3 +240,6 @@ jobs:
         else
           echo "  Image repositories not configured - check secrets"
         fi
+        
+        # Loki S3 설정은 수동으로 관리
+        echo " Loki S3 storage managed manually via Kubernetes Secret"
