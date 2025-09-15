@@ -47,3 +47,4 @@ Selector labels
 app.kubernetes.io/name: {{ include "monitoring-chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
