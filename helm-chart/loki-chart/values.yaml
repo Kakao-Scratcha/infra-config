@@ -4,31 +4,9 @@
 loki:
   enabled: true
   replicas: 1
-  # 마이크로서비스 모드 비활성화 (단일 모드)
+  # 단일 바이너리 모드 활성화
   singleBinary:
     enabled: true
-  backend:
-    enabled: false
-  write:
-    enabled: false
-  read:
-    enabled: false
-  gateway:
-    enabled: false
-  queryScheduler:
-    enabled: false
-  indexGateway:
-    enabled: false
-  compactor:
-    enabled: false
-  distributor:
-    enabled: false
-  ingester:
-    enabled: false
-  querier:
-    enabled: false
-  queryFrontend:
-    enabled: false
   # Loki S3 호환 오브젝트 스토리지 설정 (Kubernetes Secret 사용)
   storage:
     type: s3
