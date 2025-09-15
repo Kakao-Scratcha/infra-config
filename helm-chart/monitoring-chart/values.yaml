@@ -99,7 +99,7 @@ kube-prometheus-stack:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://kube-prometheus-stack-prometheus:9090
+            url: http://grafana-kube-prometheus-st-prometheus:9090
             access: proxy
             isDefault: true
           - name: Loki
