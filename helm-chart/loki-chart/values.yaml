@@ -46,6 +46,22 @@ singleBinary:
     accessModes:
       - ReadWriteOnce
     size: 10Gi
+  readinessProbe:
+    httpGet:
+      port: http
+      path: /ready
+    initialDelaySeconds: 60  # Loki가 초기화될 충분한 시간 부여
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+  livenessProbe:
+    httpGet:
+      port: http
+      path: /metrics
+    initialDelaySeconds: 60  # Loki가 초기화될 충분한 시간 부여
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
   extraEnv:
     - name: LOKI_S3_ENDPOINT
       valueFrom:
