@@ -123,12 +123,9 @@ kube-prometheus-stack:
       dashboards:
         enabled: true
         env:
-          - name: HTTP_PROXY
-            value: "http://10.0.130.50:3128"
-          - name: HTTPS_PROXY
-            value: "http://10.0.130.50:3128"
-          - name: NO_PROXY
-            value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
+          HTTP_PROXY: "http://10.0.130.50:3128"
+          HTTPS_PROXY: "http://10.0.130.50:3128"
+          NO_PROXY: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
     dashboards:
       default:
         # 쿠버네티스 클러스터 모니터링
