@@ -7,6 +7,8 @@ podSecurityPolicy:
 
 loki:
   enabled: true
+  rbac:
+    pspEnabled: false
   commonConfig:
     replication_factor: 1
   schemaConfig:
@@ -119,8 +121,8 @@ minio:
   enabled: false
 promtail:
   enabled: true
-  podSecurityPolicy:
-    enabled: false
+  rbac:
+    pspEnabled: false
   resources:
     requests:
       memory: "128Mi"
