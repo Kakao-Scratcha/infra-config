@@ -1,6 +1,10 @@
 # Single Binary 모드 설정
 deploymentMode: SingleBinary
 
+# PodSecurityPolicy 비활성화 (Kubernetes 1.25+ 에서 deprecated)
+podSecurityPolicy:
+  enabled: false
+
 loki:
   enabled: true
   commonConfig:
@@ -115,6 +119,8 @@ minio:
   enabled: false
 promtail:
   enabled: true
+  podSecurityPolicy:
+    enabled: false
   resources:
     requests:
       memory: "128Mi"
