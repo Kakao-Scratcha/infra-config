@@ -31,15 +31,6 @@ loki:
     size: 5Gi
     accessModes:
       - ReadWriteOnce
-  storageSpec:
-    volumeClaimTemplate:
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 5Gi
-        storageClassName: csi-cinder-sc-retain
   resources:
     requests:
       memory: "512Mi"
