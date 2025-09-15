@@ -74,6 +74,7 @@ jobs:
     - name: Package Loki Helm chart
       run: |
         cd helm-chart/loki-chart
+        helm dependency update
         helm package .
         echo "Loki chart packaged successfully"
         
