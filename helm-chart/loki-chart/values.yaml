@@ -63,13 +63,9 @@ loki:
         index:
           prefix: index_
           period: 24h
-  # PVC 설정 (인덱스용으로만 사용)
+  # PVC 비활성화 (S3 스토리지 사용)
   persistence:
-    enabled: true
-    storageClassName: csi-cinder-sc-retain
-    size: 1Gi  # 인덱스만 저장하므로 크기 축소
-    accessModes:
-      - ReadWriteOnce
+    enabled: false
   resources:
     requests:
       memory: "512Mi"
