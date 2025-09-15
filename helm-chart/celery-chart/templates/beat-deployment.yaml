@@ -33,11 +33,20 @@ spec:
         - name: RABBITMQ_HOST
           value: {{ include "celery-chart.fullname" . }}-rabbitmq
         - name: RABBITMQ_PORT
-          value: "5672"
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_PORT
         - name: RABBITMQ_VHOST
-          value: "/"
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_VHOST
         - name: RABBITMQ_USER
-          value: {{ .Values.rabbitmq.auth.username }}
+          valueFrom:
+            secretKeyRef:
+              name: backend-rabbitmq
+              key: RABBITMQ_USER
         - name: CELERY_RESULT_BACKEND
           value: "rpc://"
         envFrom:
