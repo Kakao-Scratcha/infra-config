@@ -7,7 +7,6 @@ on:
       - 'helm-chart/front-chart/**'
       - 'helm-chart/api-chart/**'
       - 'helm-chart/ml-vision-chart/**'
-      - 'helm-chart/ml-behavior-chart/**'
       - 'helm-chart/celery-chart/**'
       - 'helm-chart/monitoring-chart/**'
       - 'helm-chart/loki-chart/**'
@@ -19,7 +18,6 @@ env:
   API_IMAGE_REPOSITORY: ${{ secrets.API_IMAGE_REPOSITORY }}
   FRONTEND_IMAGE_REPOSITORY: ${{ secrets.FRONTEND_IMAGE_REPOSITORY }}
   ML_VISION_IMAGE_REPOSITORY: ${{ secrets.ML_VISION_IMAGE_REPOSITORY }}
-  ML_BEHAVIOR_IMAGE_REPOSITORY: ${{ secrets.ML_BEHAVIOR_IMAGE_REPOSITORY }}
 
 jobs:
   build-and-push:
@@ -58,11 +56,6 @@ jobs:
         helm package .
         echo "ML Vision chart packaged successfully"
         
-    - name: Package ML Behavior Helm chart
-      run: |
-        cd helm-chart/ml-behavior-chart
-        helm package .
-        echo "ML Behavior chart packaged successfully"
         
     - name: Package Celery Helm chart
       run: |
@@ -104,11 +97,6 @@ jobs:
         helm lint .
         echo "ML Vision chart validation passed"
         
-    - name: Validate ML Behavior Helm chart
-      run: |
-        cd helm-chart/ml-behavior-chart
-        helm lint .
-        echo "ML Behavior chart validation passed"
         
     - name: Validate Celery Helm chart
       run: |
@@ -164,16 +152,6 @@ jobs:
           fi
         fi
         
-        # ML Behavior 차트 values.yaml에 이미지 레포지토리 추가
-        cd ../ml-behavior-chart
-        if [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
-          # mlBehaviorImageRepository 필드가 없으면 추가
-          if ! grep -q "mlBehaviorImageRepository:" values.yaml; then
-            sed -i '/^image:/i mlBehaviorImageRepository: "'$ML_BEHAVIOR_IMAGE_REPOSITORY'"' values.yaml
-          else
-            sed -i "s|mlBehaviorImageRepository:.*|mlBehaviorImageRepository: \"$ML_BEHAVIOR_IMAGE_REPOSITORY\"|" values.yaml
-          fi
-        fi
         
         # Celery 차트 values.yaml에 API와 동일한 이미지 레포지토리 및 태그 추가
         cd ../celery-chart
@@ -197,11 +175,10 @@ jobs:
         
     - name: Check Helm chart configuration
       run: |
-        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ]; then
           echo "API image repository: $API_IMAGE_REPOSITORY"
           echo "Frontend image repository: $FRONTEND_IMAGE_REPOSITORY"
           echo "ML Vision image repository: $ML_VISION_IMAGE_REPOSITORY"
-          echo "ML Behavior image repository: $ML_BEHAVIOR_IMAGE_REPOSITORY"
           echo "Celery will use API image repository: $API_IMAGE_REPOSITORY"
         else
           echo "Warning: Image repositories not configured"
@@ -234,7 +211,7 @@ jobs:
         echo "ArgoCD will automatically sync when it detects changes in the helm-chart directory"
         
         # 시크릿 설정 상태 확인
-        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ] && [ -n "$ML_BEHAVIOR_IMAGE_REPOSITORY" ]; then
+        if [ -n "$API_IMAGE_REPOSITORY" ] && [ -n "$FRONTEND_IMAGE_REPOSITORY" ] && [ -n "$ML_VISION_IMAGE_REPOSITORY" ]; then
           echo " Image repositories configured"
           echo " Celery will use API image repository"
         else
