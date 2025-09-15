@@ -13,20 +13,21 @@ loki:
   write:
     replicas: 1
   # Loki 파일시스템 스토리지 설정 (PVC 사용)
-  config: |
-    storage_config:
-      filesystem:
-        chunks_directory: /var/loki/chunks
-        rules_directory: /var/loki/rules
-    schema_config:
-      configs:
-        - from: 2020-10-24
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: index_
-            period: 24h
+  storage:
+    type: filesystem
+  storage_config:
+    filesystem:
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
+  schemaConfig:
+    configs:
+      - from: 2020-10-24
+        store: boltdb-shipper
+        object_store: filesystem
+        schema: v11
+        index:
+          prefix: index_
+          period: 24h
   storageSpec:
     volumeClaimTemplate:
       spec:
