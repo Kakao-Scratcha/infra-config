@@ -47,25 +47,38 @@ loki:
     - name: HTTPS_PROXY
       value: "http://10.0.130.50:3128"
     - name: NO_PROXY
-      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
     - name: http_proxy
       value: "http://10.0.130.50:3128"
     - name: https_proxy
       value: "http://10.0.130.50:3128"
     - name: no_proxy
-      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
   schemaConfig:
     configs:
       - from: 2020-10-24
-        store: boltdb-shipper
+        store: tsdb
         object_store: aws
-        schema: v11
+        schema: v12
         index:
           prefix: index_
           period: 24h
   # PVC 비활성화 (S3 스토리지 사용)
   persistence:
     enabled: false
+  # 각 컴포넌트별 PVC 비활성화
+  backend:
+    persistence:
+      enabled: false
+  write:
+    persistence:
+      enabled: false
+  read:
+    persistence:
+      enabled: false
+  gateway:
+    persistence:
+      enabled: false
   resources:
     requests:
       memory: "512Mi"
@@ -98,10 +111,10 @@ promtail:
     - name: HTTPS_PROXY
       value: "http://10.0.130.50:3128"
     - name: NO_PROXY
-      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
     - name: http_proxy
       value: "http://10.0.130.50:3128"
     - name: https_proxy
       value: "http://10.0.130.50:3128"
     - name: no_proxy
-      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local"
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
