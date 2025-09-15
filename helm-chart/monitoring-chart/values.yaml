@@ -173,6 +173,7 @@ kube-prometheus-stack:
   # kube-state-metrics 설정
   kubeStateMetrics:
     enabled: true
+    enablePodMetrics: true  # CPU/Memory 요청·제한 메트릭 활성화
     resources:
       requests:
         memory: "64Mi"

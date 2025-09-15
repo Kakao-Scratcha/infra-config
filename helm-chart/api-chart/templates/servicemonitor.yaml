@@ -1,0 +1,19 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "api-chart.fullname" . }}-monitor
+  namespace: {{ .Values.monitoring.namespace | default "monitoring" }}
+  labels:
+    {{- include "api-chart.labels" . | nindent 4 }}
+    app: fastapi-app
+spec:
+  selector:
+    matchLabels:
+      app: fastapi-app
+  endpoints:
+  - port: http-metrics
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+{{- end }}

@@ -13,6 +13,8 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 8001
+  metricsPort: 8000
+  metricsTargetPort: 8000
 profile: "local"
 
 # RabbitMQ 연결 설정 (celery-chart에서 배포된 RabbitMQ 참조)
@@ -38,3 +40,8 @@ autoscaling:
   memoryRequest: "1500Mi"
   cpuLimit: "1000m"
   cpuRequest: "500m"
+
+# Prometheus 모니터링 설정
+monitoring:
+  enabled: true
+  namespace: "monitoring"

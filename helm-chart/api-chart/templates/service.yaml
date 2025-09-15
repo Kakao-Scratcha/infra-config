@@ -11,8 +11,9 @@ spec:
   selector:
     {{- include "api-chart.selectorLabels" . | nindent 4 }}
   ports:
-    - name: http-metrics
+    - name: http
       port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - name: http-metrics
+      port: {{ .Values.service.metricsPort | default 8000 }}
+      targetPort: {{ .Values.service.metricsTargetPort | default 8000 }}
