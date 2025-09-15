@@ -1,0 +1,11 @@
+apiVersion: v2
+name: promtail-chart
+description: A Helm chart for Promtail log collection
+type: application
+version: 0.1.0
+appVersion: "1.0"
+dependencies:
+  - name: promtail
+    version: "6.15.4"
+    repository: "https://grafana.github.io/helm-charts"
+    condition: promtail.enabled

@@ -1,0 +1,76 @@
+promtail:
+  enabled: true
+  
+  # Loki 서버 연결
+  config:
+    clients:
+      - url: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+    
+    # Kubernetes Pod 로그 수집 설정
+    scrape_configs:
+      - job_name: kubernetes-pods
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          # 네임스페이스 라벨
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          # Pod 이름 라벨
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          # 컨테이너 이름 라벨
+          - source_labels: [__meta_kubernetes_container_name]
+            target_label: container
+          # 노드 이름 라벨
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            target_label: node
+          # 로그 파일 경로 설정
+          - action: replace
+            replacement: /var/log/pods/*$1/*.log
+            separator: /
+            source_labels: [__meta_kubernetes_pod_uid, __meta_kubernetes_pod_container_name]
+            target_label: __path__
+          # 로그 파일 경로 유효성 검사
+          - action: keep
+            regex: true
+            source_labels: [__path__]
+
+  # 리소스 설정
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+  # 노드 선택자
+  nodeSelector:
+    kakaoi.io/kke-nodepool: team2-api
+
+  # 프록시 환경변수
+  extraEnv:
+    - name: HTTP_PROXY
+      value: "http://10.0.130.50:3128"
+    - name: HTTPS_PROXY
+      value: "http://10.0.130.50:3128"
+    - name: NO_PROXY
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
+    - name: http_proxy
+      value: "http://10.0.130.50:3128"
+    - name: https_proxy
+      value: "http://10.0.130.50:3128"
+    - name: no_proxy
+      value: "localhost,127.0.0.1,.svc.cluster.local,.cluster.local,10.96.0.0/12,10.244.0.0/16,10.0.0.0/8,kubernetes.default.svc.cluster.local"
+
+  # RBAC 설정
+  rbac:
+    pspEnabled: false
+
+  # ServiceAccount 설정
+  serviceAccount:
+    create: true
+
+  # 모든 노드에서 실행
+  tolerations:
+    - operator: Exists

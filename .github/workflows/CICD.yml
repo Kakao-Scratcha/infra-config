@@ -10,6 +10,7 @@ on:
       - 'helm-chart/celery-chart/**'
       - 'helm-chart/monitoring-chart/**'
       - 'helm-chart/loki-chart/**'
+      - 'helm-chart/promtail-chart/**'
       - '.github/workflows/CICD.yml'
   workflow_dispatch:
 
@@ -78,6 +79,13 @@ jobs:
         helm package .
         echo "Loki chart packaged successfully"
         
+    - name: Package Promtail Helm chart
+      run: |
+        cd helm-chart/promtail-chart
+        helm dependency update
+        helm package .
+        echo "Promtail chart packaged successfully"
+        
         
         
     - name: Validate Front Helm chart
@@ -116,6 +124,12 @@ jobs:
         cd helm-chart/loki-chart
         helm lint .
         echo "Loki chart validation passed"
+        
+    - name: Validate Promtail Helm chart
+      run: |
+        cd helm-chart/promtail-chart
+        helm lint .
+        echo "Promtail chart validation passed"
         
         
     - name: Update Helm chart values with secrets
@@ -204,6 +218,9 @@ jobs:
         echo "  --from-literal=access-key='YOUR_ACCESS_KEY' \\"
         echo "  --from-literal=secret-key='YOUR_SECRET_KEY' \\"
         echo "  -n monitoring"
+        echo ""
+        echo "IMPORTANT: Promtail will automatically connect to Loki service"
+        echo "Make sure Loki is deployed before Promtail"
         
     - name: Notify deployment
       run: |
