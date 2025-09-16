@@ -34,3 +34,7 @@ autoscaling:
 monitoring:
   enabled: true
   namespace: "monitoring"
+
+# RabbitMQ 설정
+rabbitmq:
+  enabled: true
