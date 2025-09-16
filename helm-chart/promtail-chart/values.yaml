@@ -74,3 +74,4 @@ promtail:
   # 모든 노드에서 실행
   tolerations:
     - operator: Exists
+

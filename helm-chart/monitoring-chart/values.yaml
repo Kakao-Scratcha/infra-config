@@ -27,10 +27,10 @@ kube-prometheus-stack:
           cpu: "500m"
       nodeSelector:
         kakaoi.io/kke-nodepool: team2-api
-      # 기본 설정 사용
-      # serviceMonitorSelectorNilUsesHelmValues: false
-      # podMonitorSelectorNilUsesHelmValues: false
-      # ruleSelectorNilUsesHelmValues: false
+      # ServiceMonitor 자동 발견 설정
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      ruleSelectorNilUsesHelmValues: false
 
   # Grafana 설정
   grafana:
@@ -174,6 +174,10 @@ kube-prometheus-stack:
   kubeStateMetrics:
     enabled: true
     enablePodMetrics: true  # CPU/Memory 요청·제한 메트릭 활성화
+    collectors:
+      - pods
+      - nodes
+      - resource  # resource 관련 metric (requests/limits) 수집
     resources:
       requests:
         memory: "64Mi"
@@ -187,6 +191,11 @@ kube-prometheus-stack:
   # node-exporter 설정
   nodeExporter:
     enabled: true
+    extraArgs:
+      - --collector.systemd  # optional, systemd 관련 metric
+      - --collector.cpu     # CPU metric
+      - --collector.meminfo # Memory metric
+      - --collector.cgroup  # cgroup metric (cgroup v2 환경 지원)
     resources:
       requests:
         memory: "64Mi"

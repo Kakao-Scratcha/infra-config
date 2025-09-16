@@ -7,13 +7,19 @@ metadata:
   labels:
     {{- include "api-chart.labels" . | nindent 4 }}
     app: fastapi-app
+    release: prometheus  # Prometheus가 이 ServiceMonitor를 찾을 수 있도록
 spec:
   selector:
     matchLabels:
       app: fastapi-app
+  namespaceSelector:
+    matchNames:
+      - ingress-nginx  # Service가 있는 네임스페이스
   endpoints:
   - port: http-metrics
     path: /metrics
     interval: 30s
     scrapeTimeout: 10s
+    scheme: http
 {{- end }}
+
