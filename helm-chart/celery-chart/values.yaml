@@ -1,7 +1,7 @@
 # 공통 이미지 설정 (api-chart와 동일)
 image:
   repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-backend
-  tag: "20250916043551-a57fad1ebf0254f0751f2a75c356880d4284d2ee"
+  tag: "20250916044442-0dea3fd6f4a12cbc7bd53609cfe5028a8626a962"
   pullPolicy: IfNotPresent
 
 rabbitmq:
