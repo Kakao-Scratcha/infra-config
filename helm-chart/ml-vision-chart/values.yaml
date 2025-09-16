@@ -3,7 +3,7 @@ fullnameOverride: "ml-vision"
 
 image:
   repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-ml-vision
-  tag: "20250915003428-5f12d86e88f17c50f64aaa57d4e59773d4c0de73"
+  tag: "20250916000057-f98223a3a8e5d73fbc21d2b5400c993b71c07057"
   pullPolicy: IfNotPresent
 deployment:
   maxUnavailable: 0
