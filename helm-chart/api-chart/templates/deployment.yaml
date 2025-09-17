@@ -82,22 +82,12 @@ spec:
             name: backend-rabbitmq
         ports:
         - containerPort: 8001
-        readinessProbe:
+        startupProbe:
           httpGet:
             path: /
             port: 8001
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8001
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 3
+          failureThreshold: 30   
+          periodSeconds: 10      
         lifecycle:
           preStop:
             exec:
