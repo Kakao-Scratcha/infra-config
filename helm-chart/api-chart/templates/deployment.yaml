@@ -26,6 +26,7 @@ spec:
         "prometheus.io/port": "8001"
       annotations:
     spec:
+      terminationGracePeriodSeconds: 20
       nodeSelector:
         kakaoi.io/kke-nodepool: team2-api
       containers:
