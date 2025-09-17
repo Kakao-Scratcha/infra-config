@@ -31,7 +31,7 @@ spec:
     {{- end }}
   behavior:
     scaleDown:
-      stabilizationWindowSeconds: 180
+      stabilizationWindowSeconds: 300
       policies:
       - type: Percent
         value: 30

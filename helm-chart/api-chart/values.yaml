@@ -22,7 +22,7 @@ autoscaling:
   enabled: true
   minReplicas: 3
   maxReplicas: 12
-  targetCPUUtilizationPercentage: 70
+  targetCPUUtilizationPercentage: 50
   targetMemoryUtilizationPercentage: 70
   #메모리 제한 설정
   memoryLimit: "2000Mi"
