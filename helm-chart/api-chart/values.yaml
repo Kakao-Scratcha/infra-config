@@ -3,7 +3,7 @@ fullnameOverride: "api"
 
 image:
   repository: kc-sfacspace.kr-central-2.kcr.dev/team2-repo/scratcha-backend
-  tag: "20250918014321-e3fd8b58c9a921fab2168e62062b23622cd10140"
+  tag: "20250918014615-d24fd4b54803e87e60fccc642ba506161c867c06"
 
   pullPolicy: IfNotPresent
 deployment:
