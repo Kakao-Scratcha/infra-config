@@ -20,7 +20,7 @@ profile: "local"
 # HPA 설정
 autoscaling:
   enabled: true
-  minReplicas: 5
+  minReplicas: 12
   maxReplicas: 18
   targetCPUUtilizationPercentage: 50
   targetMemoryUtilizationPercentage: 70
