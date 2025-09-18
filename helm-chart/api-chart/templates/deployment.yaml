@@ -87,7 +87,7 @@ spec:
             path: /
             port: 8001
           failureThreshold: 30   
-          periodSeconds: 10      
+          periodSeconds: 20      
         lifecycle:
           preStop:
             exec:
