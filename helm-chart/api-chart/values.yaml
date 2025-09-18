@@ -21,7 +21,7 @@ profile: "local"
 autoscaling:
   enabled: true
   minReplicas: 10
-  maxReplicas: 18
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 50
   targetMemoryUtilizationPercentage: 70
   #메모리 제한 설정
